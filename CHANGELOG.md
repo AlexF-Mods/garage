@@ -5,6 +5,9 @@ Todos los cambios notables de este mod se documentan aquí. El formato sigue
 
 ## [Unreleased]
 
+### Changed
+- Modelo de la moto Yamaha XTZ 125 (`MotorcycleModels`) renovado con mayor resolución de detalle (escala 0.60x): aletas de tanque teñibles con calcomanías `XTZ` / `YAMAHA`, tapas blancas `MONOCROSS`, bandera de Colombia pintada en el guardafango trasero, motor monocilíndrico aletado con tapa redonda, basculante de aluminio con cubrecadena, escape elevado con escudo plateado, manillar con barra transversal, fuelles acanalados y ruedas huecas de radios 20×20 de 16 lados regulares con disco de freno sin z-fighting.
+
 ### Added
 - Chiva colombiana (bus escalera, ~8 bloques de largo): 8 asientos en 4 filas (cabina de conductor + copiloto y 3 bancas abiertas), hitbox fija `3.6 × 3.75`, capacete/parrilla de carga en el techo de 54 casillas (cofre de 6 filas), radio espacial de 3 pistas (`R`, con `radioVolume` en `garage-client.json` y ranuras `track_1..3.ogg` en `sounds.json`), parabrisas transparente, capó, guardabarros y faldones teñibles (rojo anaranjado por defecto), parrilla cromada, placas `TBJ 274`, frisos y paneles decorativos, techo azul con ventanillas superiores, escalera trasera, 4 llantas de camión, manejo `VehicleTuning.CHIVA` (~40 km/h), receta y traducciones.
 - Motocarguero (trimoto de carga 200cc): 1 asiento con respaldo, platón de carga de 54 casillas (cofre de 6 filas), carenado y tanque teñibles (blanco glaciar por defecto), mampara con rejilla, barandas y compuerta, manejo `VehicleTuning.MOTOCARGUERO` (~47 km/h), receta y traducciones.

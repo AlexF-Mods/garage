@@ -29,7 +29,7 @@ final class ClientVehicles {
 
     private static final Map<String, Model> MODELS = Map.ofEntries(
             entry(VehicleSpecs.CAR, 0.9F, 1.0F, CarModels.DEF),
-            entry(VehicleSpecs.MOTORCYCLE, 0.5F, 1.0F, MotorcycleModels.DEF),
+            entry(VehicleSpecs.MOTORCYCLE, 0.5F, MotorcycleModels.MODEL_SCALE, MotorcycleModels.DEF),
             entry(VehicleSpecs.MOTOCARRO, 0.75F, 1.0F, MotocarroModels.DEF),
             entry(VehicleSpecs.MOTOCARGUERO, 0.8F, 1.0F, MotocargueroModels.DEF),
             entry(VehicleSpecs.CHIVA, 1.8F, 1.30F, ChivaModels.DEF));

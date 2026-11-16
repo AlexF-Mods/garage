@@ -30,7 +30,7 @@ public final class VehicleSpecs {
             .seats(new Vec3(0.0, 1.05, -0.08), new Vec3(0.0, 1.12, -0.42))
             .color(0x1846C7) // azul Yamaha Racing Blue
             .chestRows(1) // alforja de 9 casillas
-            .wheelRadius(0.35F)
+            .wheelRadius(0.375F) // rueda de 20 px a escala 0.60x = 12 px reales = radio 0.375 bloques
             .headTurnLimit(85.0F)
             .directTurnRate(2.8F)
             .enginePitch(0.7F, 1.7F)

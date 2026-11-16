@@ -6,6 +6,7 @@ Todos los cambios notables de este mod se documentan aquí. El formato sigue
 ## [Unreleased]
 
 ### Added
+- Chiva colombiana (bus escalera, ~8 bloques de largo): 8 asientos en 4 filas (cabina de conductor + copiloto y 3 bancas abiertas), hitbox fija `3.6 × 3.75`, capacete/parrilla de carga en el techo de 54 casillas (cofre de 6 filas), radio espacial de 3 pistas (`R`, con `radioVolume` en `garage-client.json` y ranuras `track_1..3.ogg` en `sounds.json`), parabrisas transparente, capó, guardabarros y faldones teñibles (rojo anaranjado por defecto), parrilla cromada, placas `TBJ 274`, frisos y paneles decorativos, techo azul con ventanillas superiores, escalera trasera, 4 llantas de camión, manejo `VehicleTuning.CHIVA` (~40 km/h), receta y traducciones.
 - Motocarguero (trimoto de carga 200cc): 1 asiento con respaldo, platón de carga de 54 casillas (cofre de 6 filas), carenado y tanque teñibles (blanco glaciar por defecto), mampara con rejilla, barandas y compuerta, manejo `VehicleTuning.MOTOCARGUERO` (~47 km/h), receta y traducciones.
 - Los baúles admiten de 1 a 6 filas (antes, hasta 3).
 - `VehicleResourcesTest` y `ClientVehiclesTest` comprueban que cada vehículo de `VehicleSpecs.ALL` tenga traducciones, ítem, modelo, textura, receta y modelo de cliente: lo que falte ya no se descubre jugando.

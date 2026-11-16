@@ -121,4 +121,14 @@ class VehicleResourcesTest {
             assertFalse(strings.get(key).getAsString().isBlank(), lang + ": descripción vacía");
         }
     }
+
+    @Test
+    void laRadioTieneTodasSusEntradasEnSoundsJson() throws Exception {
+        JsonObject sounds = json("assets/garage/sounds.json");
+        for (int i = 1; i <= GarageSounds.RADIO_TRACK_COUNT; i++) {
+            String key = "chiva_radio_" + i;
+            assertTrue(sounds.has(key), "sounds.json no define " + key);
+            assertFalse(sounds.getAsJsonObject(key).getAsJsonArray("sounds").isEmpty(), key + " sin sonidos");
+        }
+    }
 }

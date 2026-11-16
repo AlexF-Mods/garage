@@ -27,10 +27,11 @@ import java.util.List;
  * archivo, aunque un servidor dedicado que aún tenga la clave antigua lo crea una vez durante esa migración.
  *
  * @param engineVolume volumen del motor, de 0 (apagado) a 1
+ * @param radioVolume  volumen de la radio de los vehículos, de 0 (apagado) a 1
  */
-public record ClientConfig(float engineVolume) {
+public record ClientConfig(float engineVolume, float radioVolume) {
 
-    public static final ClientConfig DEFAULT = new ClientConfig(0.6F);
+    public static final ClientConfig DEFAULT = new ClientConfig(0.6F, 0.7F);
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -52,7 +53,7 @@ public record ClientConfig(float engineVolume) {
                 // esta config se carga antes que la del servidor)
                 Path legacyFile = file.resolveSibling(GarageConfig.FILE_NAME);
                 Float legacy = LegacyConfigMigration.readLegacyEngineVolume(legacyFile);
-                if (legacy != null) parsed = new ClientConfig(legacy);
+                if (legacy != null) parsed = new ClientConfig(legacy, DEFAULT.radioVolume());
             } else {
                 try {
                     parsed = parse(JsonParser.parseString(Files.readString(file)).getAsJsonObject());
@@ -81,33 +82,44 @@ public record ClientConfig(float engineVolume) {
      */
     static boolean create(Path file, float volume) {
         List<String> fixes = new ArrayList<>();
-        ClientConfig config = sanitize(new ClientConfig(volume), fixes);
+        ClientConfig config = sanitize(new ClientConfig(volume, DEFAULT.radioVolume()), fixes);
         fixes.forEach(fix -> GarageMod.LOGGER.warn("{} (migrado de garage.json): {}", FILE_NAME, fix));
         return write(file, config);
     }
 
-    /** Lee el volumen; falta o {@code null} = por defecto; cualquier otro tipo que no sea un número es un archivo dañado. */
+    /** Lee los volúmenes; falta o {@code null} = por defecto; cualquier tipo que no sea número es archivo dañado. */
     private static ClientConfig parse(JsonObject user) {
-        JsonElement volume = user.get("engineVolume");
-        if (volume == null || volume.isJsonNull()) return DEFAULT;
-        if (!volume.isJsonPrimitive() || !volume.getAsJsonPrimitive().isNumber()) {
-            throw new IllegalStateException("engineVolume debe ser un número, no " + volume);
+        float engine = parseVolume(user, "engineVolume", DEFAULT.engineVolume());
+        float radio = parseVolume(user, "radioVolume", DEFAULT.radioVolume());
+        return new ClientConfig(engine, radio);
+    }
+
+    private static float parseVolume(JsonObject user, String key, float fallback) {
+        JsonElement value = user.get(key);
+        if (value == null || value.isJsonNull()) return fallback;
+        if (!value.isJsonPrimitive() || !value.getAsJsonPrimitive().isNumber()) {
+            throw new IllegalStateException(key + " debe ser un número, no " + value);
         }
-        return new ClientConfig(volume.getAsFloat());
+        return value.getAsFloat();
     }
 
     /** Corrige al rango válido y anota cada corrección en {@code fixes}. */
     static ClientConfig sanitize(ClientConfig config, List<String> fixes) {
-        float volume = config.engineVolume();
-        if (Float.isNaN(volume)) {
-            fixes.add("engineVolume no es un número; se usa " + DEFAULT.engineVolume());
-            return DEFAULT;
+        float engine = clampVolume("engineVolume", config.engineVolume(), DEFAULT.engineVolume(), fixes);
+        float radio = clampVolume("radioVolume", config.radioVolume(), DEFAULT.radioVolume(), fixes);
+        return new ClientConfig(engine, radio);
+    }
+
+    private static float clampVolume(String key, float value, float fallback, List<String> fixes) {
+        if (Float.isNaN(value)) {
+            fixes.add(key + " no es un número; se usa " + fallback);
+            return fallback;
         }
-        float clamped = Math.clamp(volume, 0.0F, 1.0F);
-        if (clamped != volume) {
-            fixes.add("engineVolume = " + volume + " está fuera de [0.0, 1.0]; se usa " + clamped);
+        float clamped = Math.clamp(value, 0.0F, 1.0F);
+        if (clamped != value) {
+            fixes.add(key + " = " + value + " está fuera de [0.0, 1.0]; se usa " + clamped);
         }
-        return new ClientConfig(clamped);
+        return clamped;
     }
 
     private static void backUpAndRegenerate(Path file, Exception cause) {

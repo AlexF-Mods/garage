@@ -66,25 +66,26 @@ class ClientConfigTest {
     @Test
     void unVolumenFueraDeRangoSeAcotaYSeAvisa() throws Exception {
         Path file = dir.resolve("garage-client.json");
-        Files.writeString(file, "{\"engineVolume\": 5.0}");
+        Files.writeString(file, "{\"engineVolume\": 5.0, \"radioVolume\": -1.0}");
         ClientConfig.load(file);
         assertEquals(1.0F, ClientConfig.get().engineVolume());
+        assertEquals(0.0F, ClientConfig.get().radioVolume());
         List<String> fixes = new ArrayList<>();
-        assertEquals(0.0F, ClientConfig.sanitize(new ClientConfig(-2.0F), fixes).engineVolume());
+        assertEquals(0.0F, ClientConfig.sanitize(new ClientConfig(-2.0F, 0.7F), fixes).engineVolume());
         assertEquals(1, fixes.size());
     }
 
     @Test
     void nanVuelveAlValorPorDefecto() {
         List<String> fixes = new ArrayList<>();
-        assertEquals(ClientConfig.DEFAULT, ClientConfig.sanitize(new ClientConfig(Float.NaN), fixes));
-        assertEquals(1, fixes.size());
+        assertEquals(ClientConfig.DEFAULT, ClientConfig.sanitize(new ClientConfig(Float.NaN, Float.NaN), fixes));
+        assertEquals(2, fixes.size());
     }
 
     @Test
     void unVolumenValidoNoGeneraAvisos() {
         List<String> fixes = new ArrayList<>();
-        assertEquals(new ClientConfig(0.4F), ClientConfig.sanitize(new ClientConfig(0.4F), fixes));
+        assertEquals(new ClientConfig(0.4F, 0.8F), ClientConfig.sanitize(new ClientConfig(0.4F, 0.8F), fixes));
         assertTrue(fixes.isEmpty());
     }
 
@@ -110,8 +111,8 @@ class ClientConfigTest {
 
     @Test
     void unValorQueNoEsUnNumeroSeTrataComoCorrupto() throws Exception {
-        for (String content : new String[] {"{\"engineVolume\": \"fuerte\"}", "{\"engineVolume\": {}}",
-                "{\"engineVolume\": []}", "{\"engineVolume\": true}", "[1]", ""}) {
+        for (String content : new String[] {"{\"engineVolume\": \"fuerte\"}", "{\"radioVolume\": \"alto\"}",
+                "{\"engineVolume\": {}}", "{\"engineVolume\": []}", "{\"engineVolume\": true}", "[1]", ""}) {
             Path file = dir.resolve("garage-client.json");
             Files.deleteIfExists(dir.resolve("garage-client.json.bak"));
             Files.writeString(file, content);

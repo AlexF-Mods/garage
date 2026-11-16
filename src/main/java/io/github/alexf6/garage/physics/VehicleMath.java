@@ -102,5 +102,14 @@ public final class VehicleMath {
         return (int) Math.clamp((long) fuel * 100L / maxFuel, 0L, 100L);
     }
 
+    /**
+     * Siguiente pista de la radio en {@code [0, trackCount]} ({@code 0} = apagada). Coste O(1).
+     */
+    public static int cycleRadioTrack(int currentTrack, int trackCount) {
+        if (trackCount <= 0) return 0;
+        if (currentTrack < 0 || currentTrack >= trackCount) return 0;
+        return currentTrack + 1;
+    }
+
     private VehicleMath() {}
 }

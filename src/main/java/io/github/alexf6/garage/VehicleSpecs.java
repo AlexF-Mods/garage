@@ -66,8 +66,26 @@ public final class VehicleSpecs {
             .tuning(() -> VehicleTuning.MOTOCARGUERO)
             .build();
 
+    public static final VehicleSpec CHIVA = VehicleSpec.builder("chiva")
+            .size(3.6F, 3.75F)
+            // Cabina (conductor + copiloto) y 3 bancas abiertas de 2 pasajeros (alto/ancho 1.30x, largo 1.75x)
+            .seats(new Vec3(0.57, 1.06, 1.20), new Vec3(-0.57, 1.06, 1.20),
+                    new Vec3(0.57, 1.06, -0.11), new Vec3(-0.57, 1.06, -0.11),
+                    new Vec3(0.57, 1.06, -1.42), new Vec3(-0.57, 1.06, -1.42),
+                    new Vec3(0.57, 1.06, -2.73), new Vec3(-0.57, 1.06, -2.73))
+            .color(0xD94B1A) // rojo anaranjado tradicional de chiva
+            .chestRows(6) // capacete / parrilla de carga en el techo de 54 casillas (9x6)
+            .wheelRadius(0.56875F) // llanta de camión (7 px * 1.30x = 9.1 px)
+            .headTurnLimit(105.0F)
+            .directTurnRate(0.9F)
+            .enginePitch(0.45F, 1.25F)
+            .hasRadio(true)
+            .horn(25, SoundEvents.NOTE_BLOCK_PLING, 1.5F, 0.5F, 0.63F)
+            .tuning(() -> VehicleTuning.CHIVA)
+            .build();
+
     /** En el orden en que se registran y aparecen en la pestaña creativa. */
-    public static final List<VehicleSpec> ALL = List.of(CAR, MOTORCYCLE, MOTOCARRO, MOTOCARGUERO);
+    public static final List<VehicleSpec> ALL = List.of(CAR, MOTORCYCLE, MOTOCARRO, MOTOCARGUERO, CHIVA);
 
     private VehicleSpecs() {}
 }

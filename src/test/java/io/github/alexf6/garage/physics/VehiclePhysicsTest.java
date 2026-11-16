@@ -129,6 +129,7 @@ class VehiclePhysicsTest {
         assertNull(VehicleTuning.ENDURO.firstInvalid());
         assertNull(VehicleTuning.MOTOCARRO.firstInvalid());
         assertNull(VehicleTuning.MOTOCARGUERO.firstInvalid());
+        assertNull(VehicleTuning.CHIVA.firstInvalid());
         assertTrue(VehicleTuning.ENDURO.maxSpeed() > T.maxSpeed());
         assertTrue(VehicleTuning.ENDURO.accel() > T.accel());
         assertTrue(VehicleTuning.MOTOCARRO.maxSpeed() > T.maxSpeed());
@@ -136,6 +137,8 @@ class VehiclePhysicsTest {
         assertTrue(VehicleTuning.MOTOCARGUERO.maxSpeed() > T.maxSpeed());
         assertTrue(VehicleTuning.MOTOCARGUERO.maxSpeed() < VehicleTuning.MOTOCARRO.maxSpeed());
         assertTrue(VehicleTuning.MOTOCARGUERO.accel() > VehicleTuning.MOTOCARRO.accel());
+        assertTrue(VehicleTuning.CHIVA.maxSpeed() < T.maxSpeed());
+        assertTrue(VehicleTuning.CHIVA.wheelBase() > T.wheelBase());
         VehicleTuning broken = new VehicleTuning(0, 0.2, 0.03, 0.02, 0.04, 0.035, 0.98, 0.995, 0.85, 1.75, 0.6, 0.2, 0.1,
                 0.3, 0.92, 1.6);
         assertNotNull(broken.firstInvalid());

@@ -59,6 +59,8 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
             SynchedEntityData.defineId(MotorVehicleEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_COLOR =
             SynchedEntityData.defineId(MotorVehicleEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Byte> DATA_RADIO_TRACK =
+            SynchedEntityData.defineId(MotorVehicleEntity.class, EntityDataSerializers.BYTE);
 
     private final VehicleSpec spec;
     private final RunOverPusher runOverPusher = new RunOverPusher();
@@ -109,6 +111,7 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
         super.defineSynchedData(builder);
         builder.define(DATA_FUEL, 0);
         builder.define(DATA_COLOR, 0); // el color de verdad lo fija el constructor, cuando ya hay spec
+        builder.define(DATA_RADIO_TRACK, (byte) 0);
     }
 
     public int getFuel() {
@@ -127,11 +130,22 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
         this.entityData.set(DATA_COLOR, rgb & 0xFFFFFF);
     }
 
+    /** Pista de radio activa ({@code 0} = apagada, {@code 1..N} = pista); solo aplica si {@link VehicleSpec#hasRadio()}. */
+    public int getRadioTrack() {
+        return this.entityData.get(DATA_RADIO_TRACK);
+    }
+
+    public void setRadioTrack(int track) {
+        int max = spec != null && spec.hasRadio() ? GarageSounds.RADIO_TRACK_COUNT : 0;
+        this.entityData.set(DATA_RADIO_TRACK, (byte) Mth.clamp(track, 0, max));
+    }
+
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putInt("Fuel", getFuel());
         output.putInt("Color", getColor());
+        if (spec.hasRadio()) output.putInt("RadioTrack", getRadioTrack());
     }
 
     @Override
@@ -139,6 +153,7 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
         super.readAdditionalSaveData(input);
         setFuel(input.getIntOr("Fuel", 0));
         setColor(input.getIntOr("Color", defaultColor()));
+        setRadioTrack(input.getIntOr("RadioTrack", 0));
     }
 
     // --- Entrada del conductor (la fija el cliente, ver GarageClient) ------------------------
@@ -443,7 +458,7 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
         return exit.spot();
     }
 
-    // --- Bocina ----------------------------------------------------------------------------
+    // --- Bocina y radio ---------------------------------------------------------------------
 
     public void honk(ServerPlayer player) {
         if (hornCooldown > 0 || getControllingPassenger() != player) return;
@@ -453,5 +468,16 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
             level().playSound(null, getX(), getY(), getZ(), horn.sound().value(), SoundSource.NEUTRAL,
                     horn.volume(), pitch);
         }
+    }
+
+    /** Alterna o cambia la pista de radio si el jugador conduce un vehículo con {@link VehicleSpec#hasRadio()}. */
+    public void toggleRadio(ServerPlayer player) {
+        if (!spec.hasRadio() || getControllingPassenger() != player) return;
+        int next = VehicleMath.cycleRadioTrack(getRadioTrack(), GarageSounds.RADIO_TRACK_COUNT);
+        setRadioTrack(next);
+        Component message = next == 0
+                ? Component.translatable("message.garage.radio.off")
+                : Component.translatable("message.garage.radio.track", next);
+        player.sendSystemMessage(message, true);
     }
 }

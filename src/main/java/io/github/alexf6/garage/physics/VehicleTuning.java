@@ -75,6 +75,18 @@ public record VehicleTuning(
             0.26, 0.88, 1.6  // grip, driftGrip, driftYawBoost
     );
 
+    /** Chiva colombiana (bus escalera): chasis largo de camión (~40 km/h, 0.55 b/t), radio de giro amplio e inercia pesada. */
+    public static final VehicleTuning CHIVA = new VehicleTuning(
+            0.55, 0.16,  // maxSpeed, maxReverse
+            0.022, 0.015,  // accel, reverseAccel
+            0.035, 0.030,  // brake, handbrake
+            0.985, 0.995, 0.85,  // rollingFriction, airDrag, waterDrag
+            2.80,  // wheelBase
+            0.58, 0.18,  // maxSteerLow, maxSteerHigh
+            0.08,  // steerRate
+            0.26, 0.90, 1.4  // grip, driftGrip, driftYawBoost
+    );
+
     /** Número de parámetros de {@link #toArray()}. */
     public static final int FIELD_COUNT = 16;
 

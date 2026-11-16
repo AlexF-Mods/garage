@@ -7,8 +7,14 @@
 	"entity.garage.motocarro": "Motocarro",
 	"item.garage.motocarguero": "Motocarguero",
 	"entity.garage.motocarguero": "Motocarguero",
+	"item.garage.chiva": "Chiva",
+	"entity.garage.chiva": "Chiva",
 	"key.garage.horn": "Bocina",
+	"key.garage.radio": "Radio",
 	"key.category.garage.main": "Garage",
 	"message.garage.fuel": "Combustible: %s%%",
-	"modmenu.descriptionTranslation.garage": "Vehículos para Minecraft: un Jeep Willys, una moto Enduro Yamaha XTZ 125, un motocarro Bajaj RE y un motocarguero de 200cc con platón de 54 casillas, con combustible, baúl, colores y bocina."
+	"message.garage.radio.off": "Radio: Apagada",
+	"message.garage.radio.track": "Radio: Pista %s",
+	"subtitles.garage.chiva_radio": "Suena la radio de la chiva",
+	"modmenu.descriptionTranslation.garage": "Vehículos para Minecraft: un Jeep Willys, una moto Enduro Yamaha XTZ 125, un motocarro Bajaj RE, un motocarguero de 200cc con platón de 54 casillas y una Chiva colombiana de 8 asientos, con combustible, baúl, colores y bocina."
 }

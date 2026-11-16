@@ -123,4 +123,14 @@ class VehicleMathTest {
         assertEquals(0, VehicleMath.fuelPercent(-5, 100));
         assertEquals(0, VehicleMath.fuelPercent(10, 0), "tanque sin capacidad: no divide entre cero");
     }
+
+    @Test
+    void cycleRadioTrackAvanzaYEnvuelveACero() {
+        assertEquals(1, VehicleMath.cycleRadioTrack(0, 3));
+        assertEquals(2, VehicleMath.cycleRadioTrack(1, 3));
+        assertEquals(3, VehicleMath.cycleRadioTrack(2, 3));
+        assertEquals(0, VehicleMath.cycleRadioTrack(3, 3));
+        assertEquals(0, VehicleMath.cycleRadioTrack(-1, 3));
+        assertEquals(0, VehicleMath.cycleRadioTrack(0, 0));
+    }
 }

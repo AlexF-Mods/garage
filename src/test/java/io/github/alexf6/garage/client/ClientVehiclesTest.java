@@ -19,11 +19,16 @@ class ClientVehiclesTest {
 
     @Test
     void cadaVehiculoTieneSuModeloEnElCliente() {
+        VehicleRenderer.VehicleRenderState state = new VehicleRenderer.VehicleRenderState();
         for (VehicleSpec spec : VehicleSpecs.ALL) {
             ClientVehicles.Model model = ClientVehicles.lookOf(spec);
             assertNotNull(model.look().texture(), spec.id());
-            assertNotNull(model.bodyLayer().get(), spec.id() + " sin capa BODY");
-            assertNotNull(model.trimLayer().get(), spec.id() + " sin capa TRIM");
+            var body = model.bodyLayer().get().bakeRoot();
+            var trim = model.trimLayer().get().bakeRoot();
+            assertNotNull(body, spec.id() + " sin capa BODY");
+            assertNotNull(trim, spec.id() + " sin capa TRIM");
+            model.look().partFactory().apply(body).setupAnim(state);
+            model.look().partFactory().apply(trim).setupAnim(state);
         }
     }
 }

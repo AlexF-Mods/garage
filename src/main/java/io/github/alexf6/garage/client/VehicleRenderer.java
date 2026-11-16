@@ -25,14 +25,20 @@ import net.minecraft.util.Mth;
 public class VehicleRenderer extends EntityRenderer<MotorVehicleEntity, VehicleRenderer.VehicleRenderState> {
 
     /**
-     * @param body       capa de la carrocería (se tiñe)
-     * @param trim       capa del resto (sin teñir)
+     * @param body        capa de la carrocería (se tiñe)
+     * @param trim        capa del resto (sin teñir)
+     * @param scale       escala visual del modelo respecto al suelo
      * @param partFactory crea el modelo animado de una capa a partir de sus partes ya horneadas
      */
-    public record Look(Identifier texture, float shadowRadius, ModelLayerLocation body, ModelLayerLocation trim,
-                       Function<ModelPart, EntityModel<VehicleRenderState>> partFactory) {}
+    public record Look(Identifier texture, float shadowRadius, float scale, ModelLayerLocation body,
+                       ModelLayerLocation trim, Function<ModelPart, EntityModel<VehicleRenderState>> partFactory) {
+        public Look {
+            if (!(scale > 0.0F)) throw new IllegalArgumentException("scale debe ser positivo: " + scale);
+        }
+    }
 
     private final Identifier texture;
+    private final float scale;
     private final EntityModel<VehicleRenderState> body;
     private final EntityModel<VehicleRenderState> trim;
 
@@ -40,6 +46,7 @@ public class VehicleRenderer extends EntityRenderer<MotorVehicleEntity, VehicleR
         super(context);
         this.shadowRadius = look.shadowRadius();
         this.texture = look.texture();
+        this.scale = look.scale();
         this.body = look.partFactory().apply(context.bakeLayer(look.body()));
         this.trim = look.partFactory().apply(context.bakeLayer(look.trim()));
     }
@@ -76,7 +83,7 @@ public class VehicleRenderer extends EntityRenderer<MotorVehicleEntity, VehicleR
         if (state.hurtTime > 0.0F) {
             poseStack.rotateDegrees(Axis.ZP, Mth.sin(state.hurtTime) * state.damage / 10.0F * state.hurtDir);
         }
-        poseStack.scale(-1.0F, -1.0F, 1.0F);
+        poseStack.scale(-scale, -scale, scale);
         poseStack.translate(0.0F, -1.501F, 0.0F);
 
         collector.submitModel(body, state, poseStack, body.renderType(texture), state.lightCoords,

@@ -28,15 +28,16 @@ final class ClientVehicles {
                     Supplier<LayerDefinition> bodyLayer, Supplier<LayerDefinition> trimLayer) {}
 
     private static final Map<String, Model> MODELS = Map.ofEntries(
-            entry(VehicleSpecs.CAR, 0.9F, CarModels.DEF),
-            entry(VehicleSpecs.MOTORCYCLE, 0.5F, MotorcycleModels.DEF),
-            entry(VehicleSpecs.MOTOCARRO, 0.75F, MotocarroModels.DEF),
-            entry(VehicleSpecs.MOTOCARGUERO, 0.8F, MotocargueroModels.DEF));
+            entry(VehicleSpecs.CAR, 0.9F, 1.0F, CarModels.DEF),
+            entry(VehicleSpecs.MOTORCYCLE, 0.5F, 1.0F, MotorcycleModels.DEF),
+            entry(VehicleSpecs.MOTOCARRO, 0.75F, 1.0F, MotocarroModels.DEF),
+            entry(VehicleSpecs.MOTOCARGUERO, 0.8F, 1.0F, MotocargueroModels.DEF),
+            entry(VehicleSpecs.CHIVA, 1.8F, 1.30F, ChivaModels.DEF));
 
     /** La textura de entidad es {@code textures/entity/<id>.png}: sale del id del spec, no se repite a mano. */
-    private static Map.Entry<String, Model> entry(VehicleSpec spec, float shadowRadius, ModelDef def) {
-        VehicleRenderer.Look look = new VehicleRenderer.Look(texture(spec.id()), shadowRadius, def.body(), def.trim(),
-                def.part());
+    private static Map.Entry<String, Model> entry(VehicleSpec spec, float shadowRadius, float scale, ModelDef def) {
+        VehicleRenderer.Look look = new VehicleRenderer.Look(texture(spec.id()), shadowRadius, scale, def.body(),
+                def.trim(), def.part());
         return Map.entry(spec.id(), new Model(look, def.bodyLayer(), def.trimLayer()));
     }
 

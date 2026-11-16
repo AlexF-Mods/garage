@@ -1,0 +1,16 @@
+{
+	"model": {
+		"type": "minecraft:model",
+		"model": "garage:item/chiva",
+		"tints": [
+			{
+				"type": "minecraft:dye",
+				"default": -2536678
+			},
+			{
+				"type": "minecraft:constant",
+				"value": -1
+			}
+		]
+	}
+}

@@ -1,19 +1,19 @@
 # Garage
 
 Fabric, Minecraft 26.3, Java 25. Vehículos para Minecraft. Incluye un Jeep Willys "Yipao" cafetero de 4
-asientos, una moto Enduro (Yamaha XTZ 125) de 2 asientos, un Motocarro urbano (Bajaj RE / "Torito") de 3 asientos y un
-Motocarguero (trimoto de carga 200cc) con platón, con combustible, baúl, colores, bocina y física reactiva;
-el mod está pensado para sumar más vehículos. Hay que tener el mod en cliente y servidor.
+asientos, una moto Enduro (Yamaha XTZ 125) de 2 asientos, un Motocarro urbano (Bajaj RE / "Torito") de 3 asientos, un
+Motocarguero (trimoto de carga 200cc) con platón y una Chiva colombiana (bus escalera) de 8 asientos con capacete,
+con combustible, baúl, colores, bocina y física reactiva; el mod está pensado para sumar más vehículos. Hay que tener el mod en cliente y servidor.
 
 ## Uso
 
 - **Poner el vehículo:** clic derecho con el ítem sobre un bloque. Queda mirando hacia donde miras.
-- **Subir:** clic derecho sobre el vehículo. El primer jugador en subir conduce (4 asientos en el carro, 2 en tándem en la moto, 3 en el motocarro y 1 en el motocarguero).
+- **Subir:** clic derecho sobre el vehículo. El primer jugador en subir conduce (4 asientos en el carro, 2 en tándem en la moto, 3 en el motocarro, 1 en el motocarguero y 8 en la chiva).
 - **Bajar:** shift. Sales por la puerta o costado de tu asiento; si ese lado está tapado, por el otro.
 - **Combustible:** clic derecho con carbón o carbón vegetal. Cada unidad da 80 s de acelerador y el tanque lleno 10 min.
   Solo se gasta mientras aceleras o retrocedes. El nivel aparece en la barra de acción mientras conduces.
 - **Color:** clic derecho con cualquier tinte.
-- **Baúl / alforja:** shift + clic derecho sobre el vehículo (27 espacios en el carro, 54 en el platón del motocarguero, 18 en el motocarro y 9 en la moto).
+- **Baúl / alforja:** shift + clic derecho sobre el vehículo (27 espacios en el carro, 54 en el platón del motocarguero y en el capacete de la chiva, 18 en el motocarro y 9 en la moto).
 - **Romperlo:** golpéalo como a un bote. Suelta el ítem con su color y su nombre, y lo que haya en el baúl.
 
 ### Manejo
@@ -24,8 +24,9 @@ el mod está pensado para sumar más vehículos. Hay que tener el mod en cliente
 | A / D | Girar |
 | Espacio | Freno de mano: frena y, en curva, derrapa |
 | H | Bocina (se puede cambiar en Controles → Garage) |
+| R | Radio de la Chiva: enciende, cambia entre 3 pistas y apaga (se puede cambiar en Controles → Garage) |
 
-- Velocidad máxima hacia adelante de unos 43 km/h en el carro (14 km/h en reversa), 68 km/h en la moto Enduro, 52 km/h en el motocarro y 47 km/h en el motocarguero. Todos suben bloques completos sin saltar.
+- Velocidad máxima hacia adelante de unos 43 km/h en el carro (14 km/h en reversa), 68 km/h en la moto Enduro, 52 km/h en el motocarro, 47 km/h en el motocarguero y 40 km/h en la chiva. Todos suben bloques completos sin saltar.
 - La dirección depende de la velocidad: a baja velocidad gira cerrado (radio de unos 2.5 bloques) y a alta se endurece.
   En reversa el giro se invierte, como en un carro real.
 - En el agua se hunde despacio y no tiene tracción. El vehículo amortigua las caídas: los pasajeros no reciben daño.
@@ -40,6 +41,7 @@ el mod está pensado para sumar más vehículos. Hay que tener el mod en cliente
 | Moto | ` H ` / `IFI` / `KWK` con barrotes de hierro (`H`), lingotes (`I`), horno (`F`), lana negra (`K`) y cuero (`W`) |
 | Motocarro | `LGL` / `IFI` / `KCK` con cuero (`L`), vidrio (`G`), lingotes (`I`), horno (`F`), lana negra (`K`) y cofre (`C`) |
 | Motocarguero | `BLC` / `IFI` / `KBK` con barrotes de hierro (`B`), cuero (`L`), cofre (`C`), lingotes (`I`), horno (`F`) y lana negra (`K`) |
+| Chiva | `PGP` / `IFI` / `KCK` con tablones de madera (`P`), panel de vidrio (`G`), lingotes (`I`), horno (`F`), lana negra (`K`) y cofre (`C`) |
 
 ## Configuración
 
@@ -53,8 +55,8 @@ archivo se reescribe. Hay que reiniciar el juego (o el servidor) para aplicar ca
   uno nuevo con los valores por defecto y se avisa en el log. Si no se puede leer por permisos, se juega con los
   valores por defecto sin tocarlo.
 - Es una config **de servidor**: en multijugador manda la del servidor. Al conectarse, el servidor envía a cada cliente
-  el manejo de todos los vehículos, que reemplaza al suyo mientras dure la conexión. La moto, el motocarro y el
-  motocarguero usan perfiles fijos del mod (`ENDURO`, `MOTOCARRO` y `MOTOCARGUERO`) y no leen `tuning`.
+  el manejo de todos los vehículos, que reemplaza al suyo mientras dure la conexión. La moto, el motocarro, el
+  motocarguero y la chiva usan perfiles fijos del mod (`ENDURO`, `MOTOCARRO`, `MOTOCARGUERO` y `CHIVA`) y no leen `tuning`.
 
 Las velocidades van en bloques/tick (1 b/t = 72 km/h) y los factores son lo que se conserva por tick
 (1 = no frena, 0 = frena en seco).
@@ -89,6 +91,7 @@ mismas reglas de validación y copia de seguridad que `garage.json`.
 | Clave | Por defecto | Rango | Qué hace |
 |---|---|---|---|
 | `engineVolume` | 0.6 | 0 a 1 | Volumen del motor (0 lo apaga) |
+| `radioVolume` | 0.7 | 0 a 1 | Volumen de la radio de la Chiva (0 la silencia) |
 
 `engineVolume` vivía en `garage.json`: al cargar cualquiera de las dos configs (da igual cuál arranque primero), el valor que tuvieras allí se copia a este archivo si todavía
 no existe, y `garage.json` deja de llevarlo. Un servidor dedicado que aún tenga la clave antigua también crea el archivo
@@ -123,20 +126,21 @@ movimiento observado, así que se ven igual para todos sin paquetes extra.
 | `RunOverPusher`, `DismountLocator` | Atropello y empuje de criaturas (servidor, con la velocidad acotada) y punto por donde baja cada pasajero |
 | `physics/VehiclePhysics` | Funciones puras del manejo: velocidad, volante, giro tipo bicicleta y derrape |
 | `physics/VehicleMath` | Funciones puras de la entidad: rumbo, giro directo, salida, empuje, rodado, dirección visual y combustible |
-| `physics/VehicleTuning`, `VehicleInput` | Parámetros de un vehículo (`WILLYS`, `ENDURO`, `MOTOCARRO`, `MOTOCARGUERO`) con sus límites, y entrada inmutable del conductor |
+| `physics/VehicleTuning`, `VehicleInput` | Parámetros de un vehículo (`WILLYS`, `ENDURO`, `MOTOCARRO`, `MOTOCARGUERO`, `CHIVA`) con sus límites, y entrada inmutable del conductor |
 | `physics/VehicleAnimation` | Estado de animación visual (rodado, dirección, inclinación y suspensión), solo en el cliente |
 | `physics/Suspension` | Resortes del cabeceo, el balanceo y el rebote (solo visual) |
 | `config/GarageConfig`, `ClientConfig` | Leen, completan, validan y respaldan `config/garage.json` (servidor) y `config/garage-client.json` (cliente); `ConfigFiles` aporta la copia `.bak` y la escritura atómica |
-| `network/HornPayload`, `TuningSyncPayload` | Paquetes: bocina (cliente → servidor) y manejo de cada vehículo (servidor → cliente, al conectar) |
+| `network/HornPayload`, `RadioPayload`, `TuningSyncPayload` | Paquetes: bocina y radio (cliente → servidor) y manejo de cada vehículo (servidor → cliente, al conectar) |
 | `network/SyncedTunings` | Manejo recibido del servidor, por id de vehículo; solo lo escribe y lo lee el cliente |
-| `client/GarageClient` | Teclas del conductor, bocina, recepción del manejo y arranque del sonido del motor |
+| `client/GarageClient` | Teclas del conductor, bocina, radio, recepción del manejo y arranque del sonido del motor/radio |
 | `client/ClientVehicles`, `VehicleRenderer` | Tabla de modelos por vehículo y renderer común (carrocería teñida + resto sin teñir) |
 | `client/ModelKit` | Atajos comunes de los modelos: capas, cubos, piezas opcionales, ruedas y suspensión |
 | `client/CarModels` | Modelo del Jeep en dos capas, ruedas, suspensión y bandera |
 | `client/MotorcycleModels` | Modelo de la moto XTZ en dos capas, horquilla inclinada (rake), ruedas y tumbada (lean) |
 | `client/MotocarroModels` | Modelo del motocarro en dos capas, tren delantero Delta, suspensión y balanceo centrífugo |
 | `client/MotocargueroModels` | Modelo del motocarguero en dos capas: carenado y tanque teñibles, mampara con rejilla, platón con barandas y compuerta, y 3 ruedas |
-| `client/EngineSound` | Motor en bucle cuyo tono sube con la velocidad según el rango de cada vehículo |
+| `client/ChivaModels` | Modelo de la chiva en dos capas (~8 bloques de largo): capó, guardabarros y faldones teñibles, parrilla, parabrisas transparente, 4 bancas, decoración típica, techo azul, capacete de madera, escalera trasera y 4 llantas |
+| `client/EngineSound`, `client/RadioSound` | Motor en bucle cuyo tono sube con la velocidad y radio espacial 3D que sigue a la Chiva |
 
 Para agregar otro vehículo:
 
@@ -154,3 +158,4 @@ que no son ruedas cuelga de `chassis`, para que la suspensión mueva la carrocer
 ### Pendiente
 
 - El motor usa el sonido del minecart a falta de un sonido propio.
+- La radio de la Chiva deja 3 ranuras declaradas en `assets/garage/sounds.json` (`chiva_radio_1..3` → `assets/garage/sounds/radio/track_1..3.ogg`); falta colocar los archivos `.ogg` propios para que reproduzcan audio.

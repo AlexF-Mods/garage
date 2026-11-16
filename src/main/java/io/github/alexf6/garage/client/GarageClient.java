@@ -8,6 +8,7 @@ import io.github.alexf6.garage.VehicleSpec;
 import io.github.alexf6.garage.VehicleSpecs;
 import io.github.alexf6.garage.config.ClientConfig;
 import io.github.alexf6.garage.network.HornPayload;
+import io.github.alexf6.garage.network.RadioPayload;
 import io.github.alexf6.garage.network.SyncedTunings;
 import io.github.alexf6.garage.network.TuningSyncPayload;
 import io.github.alexf6.garage.physics.VehicleInput;
@@ -35,6 +36,41 @@ public class GarageClient implements ClientModInitializer {
             KeyMapping.Category.register(Identifier.fromNamespaceAndPath(GarageMod.MOD_ID, "main"));
     private static final KeyMapping HORN =
             KeyMappingHelper.registerKeyMapping(new KeyMapping("key.garage.horn", InputConstants.KEY_H, CATEGORY));
+    private static final KeyMapping RADIO =
+            KeyMappingHelper.registerKeyMapping(new KeyMapping("key.garage.radio", InputConstants.KEY_R, CATEGORY));
+
+    private static final class ActiveRadio {
+        final MotorVehicleEntity vehicle;
+        int track;
+        RadioSound sound;
+
+        ActiveRadio(MotorVehicleEntity vehicle) {
+            this.vehicle = vehicle;
+        }
+
+        void sync(Minecraft client) {
+            int nextTrack = vehicle.getRadioTrack();
+            if (nextTrack == track) return;
+            stop(client);
+            track = nextTrack;
+            if (nextTrack > 0) {
+                RadioSound next = RadioSound.create(vehicle, nextTrack);
+                if (next != null) {
+                    sound = next;
+                    client.getSoundManager().play(next);
+                }
+            }
+        }
+
+        void stop(Minecraft client) {
+            if (sound != null) {
+                client.getSoundManager().stop(sound);
+                sound = null;
+            }
+        }
+    }
+
+    private final Map<Integer, ActiveRadio> radioVehicles = new HashMap<>();
 
     /** Consume las pulsaciones pendientes de una tecla sin hacer nada con ellas. */
     private static void discardClicks(KeyMapping key) {
@@ -67,16 +103,27 @@ public class GarageClient implements ClientModInitializer {
             });
             SyncedTunings.set(valid);
         });
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> SyncedTunings.clear());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            SyncedTunings.clear();
+            radioVehicles.values().forEach(active -> active.stop(client));
+            radioVehicles.clear();
+        });
 
-        // Un sonido de motor por vehículo cargado; se detiene solo cuando el vehículo desaparece
+        // Un sonido de motor por vehículo cargado (y radio si el vehículo la soporta)
         ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> {
             if (entity instanceof MotorVehicleEntity vehicle) {
                 Minecraft.getInstance().getSoundManager().play(new EngineSound(vehicle));
+                if (vehicle.spec().hasRadio()) {
+                    radioVehicles.put(vehicle.getId(), new ActiveRadio(vehicle));
+                }
             }
         });
+        ClientEntityEvents.ENTITY_UNLOAD.register((entity, level) -> {
+            ActiveRadio active = radioVehicles.remove(entity.getId());
+            if (active != null) active.stop(Minecraft.getInstance());
+        });
 
-        // Pasa las teclas del conductor al vehículo antes de cada tick
+        // Pasa las teclas del conductor al vehículo antes de cada tick y actualiza la radio espacial
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
             LocalPlayer player = client.player;
             if (player == null) return;
@@ -87,8 +134,20 @@ public class GarageClient implements ClientModInitializer {
                 while (HORN.consumeClick()) {
                     ClientPlayNetworking.send(new HornPayload());
                 }
+                if (vehicle.spec().hasRadio()) {
+                    while (RADIO.consumeClick()) {
+                        ClientPlayNetworking.send(new RadioPayload());
+                    }
+                } else {
+                    discardClicks(RADIO);
+                }
             } else {
-                discardClicks(HORN); // fuera del vehículo la bocina no suena: se descartan las pulsaciones
+                discardClicks(HORN); // fuera del vehículo la bocina y radio no se accionan: se descartan pulsaciones
+                discardClicks(RADIO);
+            }
+
+            if (!radioVehicles.isEmpty()) {
+                for (ActiveRadio active : radioVehicles.values()) active.sync(client);
             }
         });
     }

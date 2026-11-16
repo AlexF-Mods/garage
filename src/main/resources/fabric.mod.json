@@ -3,7 +3,7 @@
 	"id": "garage",
 	"version": "${version}",
 	"name": "Garage",
-	"description": "Vehicles for Minecraft: a Willys Jeep, a Yamaha XTZ 125 enduro bike, a Bajaj RE auto rickshaw and a 200cc cargo trike with a 54-slot bed, with fuel, storage, dyeable bodies and a horn.",
+	"description": "Vehicles for Minecraft: a Willys Jeep, a Yamaha XTZ 125 enduro bike, a Bajaj RE auto rickshaw, a 200cc cargo trike with a 54-slot bed and a Colombian Chiva bus for 8 passengers, with fuel, storage, dyeable bodies and a horn.",
 	"authors": [
 		"AlexF6"
 	],

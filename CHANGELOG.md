@@ -6,6 +6,8 @@ Todos los cambios notables de este mod se documentan aquí. El formato sigue
 ## [Unreleased]
 
 ### Changed
+- Nombre visible de la moto cambiado de `Motocicleta` / `Motorcycle` / `Moto` a `Yamaha XTZ 125` en `en_us.json`, `es_es.json` y `es_ar.json` (manteniendo el identificador `garage:motorcycle`).
+- Modelo del motocarro Bajaj RE / "Torito" (`MotocarroModels`) renovado a escala `0.625x` (`25.6 px/bloque`): carenado frontal esculpido sobre el arco delantero, parrilla negra `RE` con doble faro redondo y direccionales ámbar, parabrisas inclinado translúcido, capota de lona negra con ventanas trasera y laterales, paneles acolchados cafés en rombos, compuerta trasera ventilada `RE` con pilotos verticales y 3 ruedas 16×16 con rines estampados sin z-fighting.
 - Modelo de la moto Yamaha XTZ 125 (`MotorcycleModels`) renovado con mayor resolución de detalle (escala 0.60x): aletas de tanque teñibles con calcomanías `XTZ` / `YAMAHA`, tapas blancas `MONOCROSS`, bandera de Colombia pintada en el guardafango trasero, motor monocilíndrico aletado con tapa redonda, basculante de aluminio con cubrecadena, escape elevado con escudo plateado, manillar con barra transversal, fuelles acanalados y ruedas huecas de radios 20×20 de 16 lados regulares con disco de freno sin z-fighting.
 
 ### Added

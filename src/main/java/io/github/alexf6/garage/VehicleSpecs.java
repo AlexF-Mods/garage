@@ -42,7 +42,7 @@ public final class VehicleSpecs {
 
     public static final VehicleSpec MOTOCARRO = VehicleSpec.builder("motocarro")
             .size(1.35F, 1.70F)
-            .seats(new Vec3(0.0, 0.70, 0.31), new Vec3(0.28, 0.75, -0.62), new Vec3(-0.28, 0.75, -0.62))
+            .seats(new Vec3(0.0, 0.62, 0.31), new Vec3(0.28, 0.75, -0.62), new Vec3(-0.28, 0.75, -0.62))
             .color(0xE8ECEF) // blanco glaciar
             .chestRows(2) // baúl de 18 casillas
             .wheelRadius(0.3125F) // rin de 10 px = radio 5 px (5/16)

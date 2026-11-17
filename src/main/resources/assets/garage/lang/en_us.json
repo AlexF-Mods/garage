@@ -18,8 +18,9 @@
 	"key.category.garage.main": "Garage",
 	"itemGroup.garage.main": "Garage",
 	"message.garage.fuel": "Fuel: %s%%",
+	"message.garage.radio.empty": "Radio: put .ogg files in config/garage/radio",
 	"message.garage.radio.off": "Radio: Off",
 	"message.garage.radio.track": "Radio: Track %s",
-	"subtitles.garage.chiva_radio": "Chiva radio plays",
+	"subtitles.garage.chiva_radio": "Vehicle radio plays",
 	"modmenu.descriptionTranslation.garage": "Vehicles for Minecraft: a Willys Jeep, a Yamaha XTZ 125 enduro bike, a Bajaj RE auto rickshaw, a 200cc cargo trike with a 54-slot bed, a Colombian Chiva bus for 8 passengers, a Renault Twingo and a Colombian river Chalupa boat, with fuel, storage, dyeable bodies and a horn."
 }

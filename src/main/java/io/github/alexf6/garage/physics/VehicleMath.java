@@ -117,12 +117,13 @@ public final class VehicleMath {
     }
 
     /**
-     * Siguiente pista de la radio en {@code [0, trackCount]} ({@code 0} = apagada). Coste O(1).
+     * Siguiente pista de la radio en {@code [0, trackCount]} ({@code 0} = apagada): avanza, tras la última se apaga,
+     * y si la pista actual ya no existe (la lista se acortó) vuelve a empezar en la 1. Coste O(1).
      */
     public static int cycleRadioTrack(int currentTrack, int trackCount) {
-        if (trackCount <= 0) return 0;
-        if (currentTrack < 0 || currentTrack >= trackCount) return 0;
-        return currentTrack + 1;
+        if (trackCount <= 0 || currentTrack < 0) return 0;
+        if (currentTrack == trackCount) return 0;
+        return currentTrack > trackCount ? 1 : currentTrack + 1;
     }
 
     private VehicleMath() {}

@@ -132,6 +132,8 @@ class VehicleMathTest {
         assertEquals(0, VehicleMath.cycleRadioTrack(3, 3));
         assertEquals(0, VehicleMath.cycleRadioTrack(-1, 3));
         assertEquals(0, VehicleMath.cycleRadioTrack(0, 0));
+        assertEquals(1, VehicleMath.cycleRadioTrack(5, 3)); // la lista se acortó: reinicia en la 1
+        assertEquals(0, VehicleMath.cycleRadioTrack(5, 0));
     }
 
     @Test

@@ -26,7 +26,7 @@ mod en cliente y servidor.
 | A / D | Girar |
 | Espacio | Freno de mano: frena y, en curva, derrapa |
 | H | Bocina (se puede cambiar en Controles → Garage) |
-| R | Radio de la Chiva y de la Chalupa: enciende, cambia entre 3 pistas y apaga (se puede cambiar en Controles → Garage) |
+| R | Radio en Yipao, Twingo, Chiva y Chalupa: enciende, cambia entre tus canciones de `config/garage/radio/` (hasta 127 `.ogg`) y apaga al terminar la lista; **mantener `R`** (0,75 s) la apaga al instante (se puede cambiar en Controles → Garage) |
 
 - Velocidad máxima hacia adelante de unos 49 km/h en el Yipao (14 km/h en reversa), 68 km/h en la moto Enduro, 52 km/h en el motocarro, 47 km/h en el motocarguero, 40 km/h en la chiva, 58 km/h en el Renault Twingo (16 km/h en reversa) y 61 km/h en la Chalupa sobre el agua (14 km/h en reversa). Los vehículos terrestres suben bloques completos sin saltar.
 - La dirección depende de la velocidad: a baja velocidad gira cerrado (radio de unos 2.5 bloques) y a alta se endurece.
@@ -166,4 +166,4 @@ que no son ruedas cuelga de `chassis`, para que la suspensión mueva la carrocer
 ### Pendiente
 
 - El motor usa el sonido del minecart a falta de un sonido propio.
-- La radio de la Chiva deja 3 ranuras declaradas en `assets/garage/sounds.json` (`chiva_radio_1..3` → `assets/garage/sounds/radio/track_1..3.ogg`); falta colocar los archivos `.ogg` propios para que reproduzcan audio.
+- La radio no trae música: cada jugador pone sus archivos `.ogg` en `config/garage/radio/` (se crea al arrancar y se relee al pulsar `R`). Cada jugador oye **su** carpeta, y la pista se elige por número: para oír lo mismo que el conductor hay que tener los mismos archivos con los mismos nombres; si falta el archivo de esa posición no suena nada. Los `.ogg` mono suenan en 3D (alcance en `radioRange`); los estéreo suenan sin posición.

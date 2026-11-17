@@ -6,7 +6,9 @@ Todos los cambios notables de este mod se documentan aquí. El formato sigue
 ## [Unreleased]
 
 ### Added
+- Mantener `R` 0,75 s apaga la radio al instante (pulsación corta sigue cambiando de pista); lógica en `HoldDetector` con tests.
 - `radioRange` en `garage-client.json` (1 a 64 bloques, por defecto 28) para el alcance de la radio.
+- Radio local: las canciones se leen de `config/garage/radio/` (hasta 127 `.ogg`, orden alfabético, releídas en segundo plano al pulsar `R`) y la barra de acción muestra el nombre del archivo, calculado en el cliente con el estado sincronizado; sin archivos avisa con `message.garage.radio.empty`. El sonido se construye por código (`RadioSound.getOrResolve`), así que se eliminan `sounds.json`, `GarageSounds` y las ranuras `track_1..3.ogg` (eventos `garage:chiva_radio_*`, aún sin publicar). `RadioPayload` ahora solo lleva el conteo de canciones (acotado a `0..127` en el servidor): cliente y servidor deben ser de la misma versión. La pista que ya no existe en la carpeta de un jugador no suena (no da la vuelta). El aviso de combustible se pausa 3 s tras pulsar `R`. Lógica pura en `RadioTracks` con tests.
 
 ### Changed
 - Balance general y funcionalidades compartidas: radio espacial (`R`) habilitada también en el **Yipao** y el **Renault Twingo** (subtítulo unificado a *"Suena la radio del vehículo"*); **Yipao** diferenciado como todoterreno de carga (`36` casillas, `~49 km/h` y `0.68 b/t` en `VehicleTuning.WILLYS`) frente al **Twingo** compacto urbano (`18` casillas, `58 km/h`); factor de masa por vehículo (`impactMultiplier` en `VehicleSpec` y `RunOverMath`) para que Chiva (`1.60x`) y Yipao (`1.20x`) golpeen más duro que la moto (`0.50x`); y recetas ajustadas para exigir `minecraft:chest` en Yipao y Chalupa y subir la Chiva a bloques de hierro y 2 cofres.

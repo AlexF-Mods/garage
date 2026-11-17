@@ -52,6 +52,7 @@ import net.minecraft.world.phys.Vec3;
  */
 public class MotorVehicleEntity extends ChestVehicleEntity {
 
+    private static final int RADIO_MESSAGE_TICKS = 60; // lo que dura el nombre de la pista en la action bar
     private static final int FUEL_HUD_INTERVAL = 40; // la action bar dura ~3 s; se reenvía antes o si cambia
     private static final double DEFAULT_GRAVITY = 0.08; // bloques/tick²
     private static final float STEP_HEIGHT = 1.0F; // sube bloques completos sin saltar
@@ -75,6 +76,7 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
     private double steerAngle; // ángulo real de dirección (solo en quien simula)
     private float deltaRotation;
     private int lastFuelPercent = -1;
+    private int fuelHudPausedUntil; // tick hasta el que el combustible no pisa el mensaje de la radio
     private int hornCooldown;
 
     private final VehicleAnimation animation;
@@ -136,13 +138,16 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
         this.entityData.set(DATA_COLOR, rgb & 0xFFFFFF);
     }
 
+    /** Máximo de pistas soportado por {@link #DATA_RADIO_TRACK} (almacenado en {@code byte}). */
+    public static final int MAX_RADIO_TRACKS = 127;
+
     /** Pista de radio activa ({@code 0} = apagada, {@code 1..N} = pista); solo aplica si {@link VehicleSpec#hasRadio()}. */
     public int getRadioTrack() {
         return this.entityData.get(DATA_RADIO_TRACK);
     }
 
     public void setRadioTrack(int track) {
-        int max = spec != null && spec.hasRadio() ? GarageSounds.RADIO_TRACK_COUNT : 0;
+        int max = spec != null && spec.hasRadio() ? MAX_RADIO_TRACKS : 0;
         this.entityData.set(DATA_RADIO_TRACK, (byte) Mth.clamp(track, 0, max));
     }
 
@@ -302,6 +307,8 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
         if (getFuel() > 0 && (keys.forward() || keys.backward())) {
             setFuel(getFuel() - 1);
         }
+
+        if (this.tickCount < fuelHudPausedUntil) return;
 
         // Solo manda paquete si cambia el porcentaje o antes de que se borre la action bar
         int percent = VehicleMath.fuelPercent(getFuel(), GarageConfig.get().maxFuel());
@@ -511,14 +518,16 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
         }
     }
 
-    /** Alterna o cambia la pista de radio si el jugador conduce un vehículo con {@link VehicleSpec#hasRadio()}. */
-    public void toggleRadio(ServerPlayer player) {
+    /**
+     * Enciende, cambia de pista o apaga la radio si el jugador la conduce. {@code requestedTrackCount} viene del
+     * cliente (no confiable): se acota a {@code [0, MAX_RADIO_TRACKS]}. Con 0 canciones la radio queda apagada.
+     * El cliente muestra el mensaje con el estado ya sincronizado; aquí solo se pausa el aviso de combustible.
+     */
+    public void toggleRadio(ServerPlayer player, int requestedTrackCount) {
         if (!spec.hasRadio() || getControllingPassenger() != player) return;
-        int next = VehicleMath.cycleRadioTrack(getRadioTrack(), GarageSounds.RADIO_TRACK_COUNT);
-        setRadioTrack(next);
-        Component message = next == 0
-                ? Component.translatable("message.garage.radio.off")
-                : Component.translatable("message.garage.radio.track", next);
-        player.sendSystemMessage(message, true);
+        int trackCount = Mth.clamp(requestedTrackCount, 0, MAX_RADIO_TRACKS);
+        setRadioTrack(VehicleMath.cycleRadioTrack(getRadioTrack(), trackCount));
+        fuelHudPausedUntil = this.tickCount + RADIO_MESSAGE_TICKS;
+        lastFuelPercent = -1; // al terminar la pausa el combustible vuelve a mostrarse
     }
 }

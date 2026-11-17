@@ -183,6 +183,10 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
             if (driver == null) input = VehicleInput.NONE;
             // Aparcado y quieto: basta comprobar el suelo cada medio segundo en vez de cada tick
             if (!isParked(driver) || this.tickCount % PARKED_DRIVE_INTERVAL == 0) drive();
+        } else if (level().isClientSide()) {
+            // Sin autoridad local en el cliente (sin conductor), el servidor dicta la posición:
+            // limpiar deltaMovement evita que al volver a subir arranque con la velocidad congelada anterior.
+            setDeltaMovement(Vec3.ZERO);
         }
         // Después de moverse: si no, en el cliente del conductor el giro y la distancia del tick valen 0
         deltaRotation = Mth.wrapDegrees(getYRot() - this.yRotO);

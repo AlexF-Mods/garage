@@ -96,7 +96,8 @@ mismas reglas de validación y copia de seguridad que `garage.json`.
 | Clave | Por defecto | Rango | Qué hace |
 |---|---|---|---|
 | `engineVolume` | 0.6 | 0 a 1 | Volumen del motor (0 lo apaga) |
-| `radioVolume` | 0.7 | 0 a 1 | Volumen de la radio de la Chiva y la Chalupa (0 la silencia) |
+| `radioVolume` | 0.7 | 0 a 1 | Volumen de la radio de los vehículos (0 la silencia) |
+| `radioRange` | 28 | 1 a 64 | Bloques a los que la radio deja de oírse (solo `.ogg` mono; dentro del vehículo siempre se oye) |
 
 `engineVolume` vivía en `garage.json`: al cargar cualquiera de las dos configs (da igual cuál arranque primero), el valor que tuvieras allí se copia a este archivo si todavía
 no existe, y `garage.json` deja de llevarlo. Un servidor dedicado que aún tenga la clave antigua también crea el archivo

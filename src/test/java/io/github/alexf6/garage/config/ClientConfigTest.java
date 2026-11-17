@@ -71,21 +71,21 @@ class ClientConfigTest {
         assertEquals(1.0F, ClientConfig.get().engineVolume());
         assertEquals(0.0F, ClientConfig.get().radioVolume());
         List<String> fixes = new ArrayList<>();
-        assertEquals(0.0F, ClientConfig.sanitize(new ClientConfig(-2.0F, 0.7F), fixes).engineVolume());
+        assertEquals(0.0F, ClientConfig.sanitize(new ClientConfig(-2.0F, 0.7F, 28), fixes).engineVolume());
         assertEquals(1, fixes.size());
     }
 
     @Test
     void nanVuelveAlValorPorDefecto() {
         List<String> fixes = new ArrayList<>();
-        assertEquals(ClientConfig.DEFAULT, ClientConfig.sanitize(new ClientConfig(Float.NaN, Float.NaN), fixes));
+        assertEquals(ClientConfig.DEFAULT, ClientConfig.sanitize(new ClientConfig(Float.NaN, Float.NaN, 28), fixes));
         assertEquals(2, fixes.size());
     }
 
     @Test
     void unVolumenValidoNoGeneraAvisos() {
         List<String> fixes = new ArrayList<>();
-        assertEquals(new ClientConfig(0.4F, 0.8F), ClientConfig.sanitize(new ClientConfig(0.4F, 0.8F), fixes));
+        assertEquals(new ClientConfig(0.4F, 0.8F, 28), ClientConfig.sanitize(new ClientConfig(0.4F, 0.8F, 28), fixes));
         assertTrue(fixes.isEmpty());
     }
 
@@ -111,7 +111,7 @@ class ClientConfigTest {
 
     @Test
     void unValorQueNoEsUnNumeroSeTrataComoCorrupto() throws Exception {
-        for (String content : new String[] {"{\"engineVolume\": \"fuerte\"}", "{\"radioVolume\": \"alto\"}",
+        for (String content : new String[] {"{\"engineVolume\": \"fuerte\"}", "{\"radioVolume\": \"alto\"}", "{\"radioRange\": \"lejos\"}",
                 "{\"engineVolume\": {}}", "{\"engineVolume\": []}", "{\"engineVolume\": true}", "[1]", ""}) {
             Path file = dir.resolve("garage-client.json");
             Files.deleteIfExists(dir.resolve("garage-client.json.bak"));
@@ -139,5 +139,16 @@ class ClientConfigTest {
             assertEquals(List.of("garage-client.json"), files.map(p -> p.getFileName().toString()).sorted().toList());
         }
         assertFalse(Files.exists(dir.resolve("garage-client.json.bak")));
+    }
+
+    @Test
+    void elAlcanceDeLaRadioSeAcotaAlRango() {
+        List<String> fixes = new ArrayList<>();
+        assertEquals(ClientConfig.MAX_RADIO_RANGE,
+                ClientConfig.sanitize(new ClientConfig(0.6F, 0.7F, 9999), fixes).radioRange());
+        assertEquals(ClientConfig.MIN_RADIO_RANGE,
+                ClientConfig.sanitize(new ClientConfig(0.6F, 0.7F, -5), fixes).radioRange());
+        assertEquals(2, fixes.size());
+        assertEquals(30, ClientConfig.sanitize(new ClientConfig(0.6F, 0.7F, 30), new ArrayList<>()).radioRange());
     }
 }

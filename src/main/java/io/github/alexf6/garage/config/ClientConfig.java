@@ -28,10 +28,17 @@ import java.util.List;
  *
  * @param engineVolume volumen del motor, de 0 (apagado) a 1
  * @param radioVolume  volumen de la radio de los vehículos, de 0 (apagado) a 1
+ * @param radioRange   bloques a los que la radio deja de oírse, de {@link #MIN_RADIO_RANGE} a
+ *                     {@link #MAX_RADIO_RANGE} (solo pistas mono)
  */
-public record ClientConfig(float engineVolume, float radioVolume) {
+public record ClientConfig(float engineVolume, float radioVolume, int radioRange) {
 
-    public static final ClientConfig DEFAULT = new ClientConfig(0.6F, 0.7F);
+    public static final int MIN_RADIO_RANGE = 1;
+    public static final int MAX_RADIO_RANGE = 64;
+
+    public static final int DEFAULT_RADIO_RANGE = 28;
+
+    public static final ClientConfig DEFAULT = new ClientConfig(0.6F, 0.7F, DEFAULT_RADIO_RANGE);
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -53,7 +60,7 @@ public record ClientConfig(float engineVolume, float radioVolume) {
                 // esta config se carga antes que la del servidor)
                 Path legacyFile = file.resolveSibling(GarageConfig.FILE_NAME);
                 Float legacy = LegacyConfigMigration.readLegacyEngineVolume(legacyFile);
-                if (legacy != null) parsed = new ClientConfig(legacy, DEFAULT.radioVolume());
+                if (legacy != null) parsed = new ClientConfig(legacy, DEFAULT.radioVolume(), DEFAULT.radioRange());
             } else {
                 try {
                     parsed = parse(JsonParser.parseString(Files.readString(file)).getAsJsonObject());
@@ -82,7 +89,7 @@ public record ClientConfig(float engineVolume, float radioVolume) {
      */
     static boolean create(Path file, float volume) {
         List<String> fixes = new ArrayList<>();
-        ClientConfig config = sanitize(new ClientConfig(volume, DEFAULT.radioVolume()), fixes);
+        ClientConfig config = sanitize(new ClientConfig(volume, DEFAULT.radioVolume(), DEFAULT.radioRange()), fixes);
         fixes.forEach(fix -> GarageMod.LOGGER.warn("{} (migrado de garage.json): {}", FILE_NAME, fix));
         return write(file, config);
     }
@@ -91,23 +98,41 @@ public record ClientConfig(float engineVolume, float radioVolume) {
     private static ClientConfig parse(JsonObject user) {
         float engine = parseVolume(user, "engineVolume", DEFAULT.engineVolume());
         float radio = parseVolume(user, "radioVolume", DEFAULT.radioVolume());
-        return new ClientConfig(engine, radio);
+        int range = parseRange(user, "radioRange", DEFAULT.radioRange());
+        return new ClientConfig(engine, radio, range);
+    }
+
+    private static int parseRange(JsonObject user, String key, int fallback) {
+        JsonElement value = numberOrNull(user, key);
+        if (value == null) return fallback;
+        return (int) Math.clamp(Math.round(value.getAsDouble()), Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
     private static float parseVolume(JsonObject user, String key, float fallback) {
+        JsonElement value = numberOrNull(user, key);
+        return value == null ? fallback : value.getAsFloat();
+    }
+
+    /** Valor numérico de {@code key}, {@code null} si falta o es {@code null}; cualquier otro tipo es archivo dañado. */
+    private static JsonElement numberOrNull(JsonObject user, String key) {
         JsonElement value = user.get(key);
-        if (value == null || value.isJsonNull()) return fallback;
+        if (value == null || value.isJsonNull()) return null;
         if (!value.isJsonPrimitive() || !value.getAsJsonPrimitive().isNumber()) {
             throw new IllegalStateException(key + " debe ser un número, no " + value);
         }
-        return value.getAsFloat();
+        return value;
     }
 
     /** Corrige al rango válido y anota cada corrección en {@code fixes}. */
     static ClientConfig sanitize(ClientConfig config, List<String> fixes) {
         float engine = clampVolume("engineVolume", config.engineVolume(), DEFAULT.engineVolume(), fixes);
         float radio = clampVolume("radioVolume", config.radioVolume(), DEFAULT.radioVolume(), fixes);
-        return new ClientConfig(engine, radio);
+        int range = Math.clamp(config.radioRange(), MIN_RADIO_RANGE, MAX_RADIO_RANGE);
+        if (range != config.radioRange()) {
+            fixes.add("radioRange = " + config.radioRange() + " está fuera de [" + MIN_RADIO_RANGE + ", "
+                    + MAX_RADIO_RANGE + "]; se usa " + range);
+        }
+        return new ClientConfig(engine, radio, range);
     }
 
     private static float clampVolume(String key, float value, float fallback, List<String> fixes) {

@@ -5,6 +5,9 @@ Todos los cambios notables de este mod se documentan aquí. El formato sigue
 
 ## [Unreleased]
 
+### Added
+- `radioRange` en `garage-client.json` (1 a 64 bloques, por defecto 28) para el alcance de la radio.
+
 ### Changed
 - Balance general y funcionalidades compartidas: radio espacial (`R`) habilitada también en el **Yipao** y el **Renault Twingo** (subtítulo unificado a *"Suena la radio del vehículo"*); **Yipao** diferenciado como todoterreno de carga (`36` casillas, `~49 km/h` y `0.68 b/t` en `VehicleTuning.WILLYS`) frente al **Twingo** compacto urbano (`18` casillas, `58 km/h`); factor de masa por vehículo (`impactMultiplier` en `VehicleSpec` y `RunOverMath`) para que Chiva (`1.60x`) y Yipao (`1.20x`) golpeen más duro que la moto (`0.50x`); y recetas ajustadas para exigir `minecraft:chest` en Yipao y Chalupa y subir la Chiva a bloques de hierro y 2 cofres.
 - Nombre visible del carro cambiado de `Carro` / `Car` a `Yipao` en `en_us.json`, `es_es.json` y `es_ar.json` (manteniendo `garage:car` estable) y vista en primera persona ampliada en `CarModels` y `VehicleSpecs.CAR` (carpa y barra superior `+6 px`, volante bajado al tablero y asientos delanteros en `(±0.40, 0.80, 0.12)`).

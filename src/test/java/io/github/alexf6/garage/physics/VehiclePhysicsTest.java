@@ -130,6 +130,8 @@ class VehiclePhysicsTest {
         assertNull(VehicleTuning.MOTOCARRO.firstInvalid());
         assertNull(VehicleTuning.MOTOCARGUERO.firstInvalid());
         assertNull(VehicleTuning.CHIVA.firstInvalid());
+        assertNull(VehicleTuning.TWINGO.firstInvalid());
+        assertNull(VehicleTuning.CHALUPA.firstInvalid());
         assertTrue(VehicleTuning.ENDURO.maxSpeed() > T.maxSpeed());
         assertTrue(VehicleTuning.ENDURO.accel() > T.accel());
         assertTrue(VehicleTuning.MOTOCARRO.maxSpeed() > T.maxSpeed());
@@ -139,11 +141,32 @@ class VehiclePhysicsTest {
         assertTrue(VehicleTuning.MOTOCARGUERO.accel() > VehicleTuning.MOTOCARRO.accel());
         assertTrue(VehicleTuning.CHIVA.maxSpeed() < T.maxSpeed());
         assertTrue(VehicleTuning.CHIVA.wheelBase() > T.wheelBase());
+        assertTrue(VehicleTuning.TWINGO.maxSpeed() > T.maxSpeed());
+        assertTrue(VehicleTuning.TWINGO.maxSpeed() < VehicleTuning.ENDURO.maxSpeed());
+        assertTrue(VehicleTuning.TWINGO.wheelBase() < T.wheelBase());
+        assertTrue(VehicleTuning.CHALUPA.maxSpeed() > T.maxSpeed());
+        assertTrue(VehicleTuning.CHALUPA.wheelBase() > T.wheelBase());
         VehicleTuning broken = new VehicleTuning(0, 0.2, 0.03, 0.02, 0.04, 0.035, 0.98, 0.995, 0.85, 1.75, 0.6, 0.2, 0.1,
                 0.3, 0.92, 1.6);
         assertNotNull(broken.firstInvalid());
         VehicleTuning badSteer = new VehicleTuning(0.6, 0.2, 0.03, 0.02, 0.04, 0.035, 0.98, 0.995, 0.85, 1.75, 2.0, 0.2, 0.1,
                 0.3, 0.92, 1.6);
         assertNotNull(badSteer.firstInvalid());
+    }
+
+    @Test
+    void embarcacionAceleraEnElAguaYFrenaAlVararseEnTierra() {
+        VehicleTuning boat = VehicleTuning.CHALUPA;
+        double waterSpeed = 0.0;
+        for (int i = 0; i < 60; i++) {
+            waterSpeed = VehiclePhysics.nextSpeed(waterSpeed, GAS, true, false, true, true, boat);
+        }
+        assertTrue(waterSpeed > boat.maxSpeed() * 0.6, "en el agua acelera: " + waterSpeed);
+        assertEquals(0.0, VehiclePhysics.nextSpeed(0.0, GAS, true, true, false, true, boat),
+                "varada en tierra firme no acelera sin agua");
+        assertTrue(VehiclePhysics.nextSpeed(0.5, GAS, true, true, false, true, boat)
+                < 0.5 * VehiclePhysics.WATERCRAFT_LAND_FRICTION + 1e-6);
+        assertTrue(VehiclePhysics.nextLateral(0.4, VehicleInput.NONE, false, true, true, boat)
+                < VehiclePhysics.nextLateral(0.4, HANDBRAKE, false, true, true, boat));
     }
 }

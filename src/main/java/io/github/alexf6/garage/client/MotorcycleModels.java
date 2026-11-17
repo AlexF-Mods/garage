@@ -46,11 +46,15 @@ public final class MotorcycleModels {
     private static final String SWINGARM = "swingarm";
     private static final String REAR_WHEEL = "rear_wheel";
 
-    // Ralentí del monocilíndrico: el vaivén gira el chasis (yRot) y parte pasa al cabeceo
-    private static final ModelKit.IdleVibration IDLE = new ModelKit.IdleVibration(1.4F, 0.02F, 2.8F, 0.08F, 0.4F);
+    // Ralentí suave del monocilíndrico: ligera pulsación vertical y vaivén mínimo al estar detenida
+    private static final ModelKit.IdleVibration IDLE = new ModelKit.IdleVibration(0.9F, 0.005F, 1.8F, 0.025F, 0.35F);
 
     /** Ángulo de avance (rake) de la horquilla Enduro: -24° (-0.42 rad), inclina las barras hacia adelante (-Z). */
     private static final float FORK_RAKE = -0.42F;
+
+    private static final int FRAME_U = 44;
+    private static final int FRAME_V = 96;
+    private static final ModelKit.OctagonWheel WHEEL_RING = new ModelKit.OctagonWheel(192, 0, 3.1F, 9.25F, 7.20F, 3.83F);
 
     private static ModelLayerLocation layer(String name) {
         return ModelKit.layer("motorcycle", name);
@@ -108,25 +112,25 @@ public final class MotorcycleModels {
         PartDefinition leanRoot = root.addOrReplaceChild(LEAN_ROOT, CubeListBuilder.create(), at(0.0F, 24.0F, 0.0F));
         PartDefinition chassis = leanRoot.addOrReplaceChild(CHASSIS, CubeListBuilder.create(), PartPose.ZERO);
 
-        // 1. Chasis perimetral negro, caja de filtro, monoshock y reposapiés
+        // 1. Chasis perimetral negro, caja de filtro, monoshock y reposapiés (parche sólido 56x26 en 44,96)
         PartDefinition frameEngine = chassis.addOrReplaceChild("frame_engine", CubeListBuilder.create()
-                .texOffs(0, 22).addBox(-2.5F, -13.5F, -11.0F, 5, 2, 14)   // Cuna inferior
-                .texOffs(0, 22).addBox(-1.5F, -27.5F, -12.5F, 3, 14, 3)   // Tubo frontal (downtube)
-                .texOffs(0, 22).addBox(-3.0F, -25.5F, 0.0F, 6, 3, 16)     // Subchasis trasero
-                .texOffs(0, 22).addBox(-3.2F, -25.0F, 1.5F, 6, 7, 7)      // Caja de aire negra bajo el sillín
-                .texOffs(0, 22).addBox(-7.5F, -12.0F, -1.5F, 15, 2, 2)    // Reposapiés conductor
-                .texOffs(0, 22).addBox(-6.0F, -18.5F, 7.5F, 12, 2, 2),    // Reposapiés pasajero
+                .texOffs(FRAME_U, FRAME_V).addBox(-2.5F, -13.5F, -11.0F, 5, 2, 14)   // Cuna inferior
+                .texOffs(FRAME_U, FRAME_V).addBox(-1.5F, -27.5F, -12.5F, 3, 14, 3)   // Tubo frontal (downtube)
+                .texOffs(FRAME_U, FRAME_V).addBox(-3.0F, -25.5F, 0.0F, 6, 3, 16)     // Subchasis trasero
+                .texOffs(FRAME_U, FRAME_V).addBox(-3.2F, -25.0F, 1.5F, 6, 7, 7)      // Caja de aire negra bajo el sillín
+                .texOffs(FRAME_U, FRAME_V).addBox(-7.5F, -12.0F, -1.5F, 15, 2, 2)    // Reposapiés conductor
+                .texOffs(FRAME_U, FRAME_V).addBox(-6.0F, -18.5F, 7.5F, 12, 2, 2),    // Reposapiés pasajero
                 PartPose.ZERO);
-        frameEngine.addOrReplaceChild("frame_spar_l", cube(0, 22)
-                .addBox(2.5F, -1.0F, 0.0F, 1.5F, 2, 18),
+        frameEngine.addOrReplaceChild("frame_spar_l", cube(FRAME_U, FRAME_V)
+                .addBox(2.5F, -1.0F, 0.0F, 1.5F, 2, 21),
                 PartPose.offsetAndRotation(0.0F, -28.0F, -10.5F, -0.78F, 0.0F, 0.0F));
-        frameEngine.addOrReplaceChild("frame_spar_r", cube(0, 22)
-                .addBox(-4.0F, -1.0F, 0.0F, 1.5F, 2, 18),
+        frameEngine.addOrReplaceChild("frame_spar_r", cube(FRAME_U, FRAME_V)
+                .addBox(-4.0F, -1.0F, 0.0F, 1.5F, 2, 21),
                 PartPose.offsetAndRotation(0.0F, -28.0F, -10.5F, -0.78F, 0.0F, 0.0F));
-        frameEngine.addOrReplaceChild("rear_stay_l", cube(0, 22)
-                .addBox(3.5F, -24.5F, 5.0F, 1, 7, 1.5F), PartPose.ZERO);
-        frameEngine.addOrReplaceChild("rear_stay_r", cube(0, 22)
-                .addBox(-4.5F, -24.5F, 5.0F, 1, 7, 1.5F), PartPose.ZERO);
+        frameEngine.addOrReplaceChild("rear_stay_l", cube(FRAME_U, FRAME_V)
+                .addBox(2.5F, -22.5F, 6.0F, 1, 6, 1.5F), PartPose.ZERO);
+        frameEngine.addOrReplaceChild("rear_stay_r", cube(FRAME_U, FRAME_V)
+                .addBox(-3.5F, -22.5F, 6.0F, 1, 6, 1.5F), PartPose.ZERO);
         frameEngine.addOrReplaceChild("monoshock", cube(44, 22)
                 .addBox(-1.5F, -21.5F, 2.0F, 3, 9, 3), PartPose.ZERO);
 
@@ -182,32 +186,22 @@ public final class MotorcycleModels {
                 .addBox(-2.5F, 0.0F, 0.0F, 5, 7, 1),
                 PartPose.offsetAndRotation(0.0F, 3.2F, 8.8F, 0.18F, 0.0F, 0.0F));
 
-        // 3. Basculante trasero de aluminio YAMAHA, cubrecadena y rueda trasera de radios hueca (20x20, radio 10 px)
-        PartDefinition swingarm = chassis.addOrReplaceChild(SWINGARM, CubeListBuilder.create()
+        // 3. Basculante trasero de aluminio YAMAHA y cubrecadena
+        chassis.addOrReplaceChild(SWINGARM, CubeListBuilder.create()
                 .texOffs(0, 66).addBox(2.2F, -1.5F, 0.0F, 2, 3, 18)
                 .texOffs(0, 66).addBox(-4.2F, -1.5F, 0.0F, 2, 3, 18)
-                .texOffs(0, 22).addBox(1.80F, -2.2F, 2.5F, 0.6F, 1, 12.5F),
+                .texOffs(FRAME_U, FRAME_V).addBox(1.80F, -2.2F, 2.5F, 0.6F, 1, 12.5F),
                 at(0.0F, -10.0F, 1.5F));
 
-        // Aro octogonal exacto (R_plano = 9.25, ancho = 7.66 -> esquina 10.01 en 22.5°): borde continuo sin dientes
-        CubeListBuilder wheelTread0 = cube(192, 0)
-                .addBox(-1.55F, -9.25F, -3.83F, 3.1F, 2.05F, 7.66F)
-                .addBox(-1.55F, 7.20F, -3.83F, 3.1F, 2.05F, 7.66F)
-                .addBox(-1.50F, -3.83F, -9.25F, 3.0F, 7.66F, 2.05F)
-                .addBox(-1.50F, -3.83F, 7.20F, 3.0F, 7.66F, 2.05F);
-        CubeListBuilder wheelTread45 = cube(192, 0)
-                .addBox(-1.45F, -9.25F, -3.83F, 2.9F, 2.05F, 7.66F)
-                .addBox(-1.45F, 7.20F, -3.83F, 2.9F, 2.05F, 7.66F)
-                .addBox(-1.40F, -3.83F, -9.25F, 2.8F, 7.66F, 2.05F)
-                .addBox(-1.40F, -3.83F, 7.20F, 2.8F, 7.66F, 2.05F);
         // Discos de rin/radios/buje con espesor 0.2F (cero caras coplanares ni z-fighting)
         CubeListBuilder wheelHubs = cube(0, 96)
                 .addBox(1.55F, -10.0F, -10.0F, 0.2F, 20, 20)
                 .addBox(-1.75F, -10.0F, -10.0F, 0.2F, 20, 20);
 
-        ModelKit.addWheel(swingarm, REAR_WHEEL, at(0.0F, 0.0F, 16.5F), wheelTread0, wheelTread45, wheelHubs);
+        // Ruedas colgadas de leanRoot (fijas al suelo bajo la suspensión) con aro octogonal 20x20
+        ModelKit.addOctagonWheel(leanRoot, REAR_WHEEL, at(0.0F, -10.0F, 18.0F), WHEEL_RING, wheelHubs);
 
-        // 4. Horquillas telescópicas con fuelles, faro, direccionales, manillar cross-braced y rueda delantera
+        // 4. Horquillas telescópicas con fuelles, faro, direccionales, manillar cross-braced conectado y rueda delantera
         PartDefinition steering = chassis.addOrReplaceChild(STEERING, CubeListBuilder.create(),
                 PartPose.offsetAndRotation(0.0F, -29.0F, -12.5F, FORK_RAKE, 0.0F, 0.0F));
 
@@ -230,18 +224,22 @@ public final class MotorcycleModels {
                 PartPose.ZERO);
 
         steering.addOrReplaceChild("handlebars", CubeListBuilder.create()
-                .texOffs(146, 66).addBox(-2.5F, -5.0F, -1.0F, 5, 3, 2)   // Velocímetro
-                .texOffs(162, 66).addBox(-9.0F, -6.5F, -0.5F, 18, 1, 1)  // Barra principal de aluminio
-                .texOffs(162, 66).addBox(-6.0F, -7.8F, -0.5F, 12, 1, 1)  // Barra transversal de refuerzo
-                .texOffs(0, 22).addBox(7.0F, -6.7F, -0.7F, 4, 1.4F, 1.4F)
-                .texOffs(0, 22).addBox(-11.0F, -6.7F, -0.7F, 4, 1.4F, 1.4F)
-                .texOffs(0, 22).addBox(7.5F, -11.5F, -0.3F, 1, 5, 1)     // Varilla espejo izq
-                .texOffs(0, 22).addBox(-8.5F, -11.5F, -0.3F, 1, 5, 1)    // Varilla espejo der
-                .texOffs(0, 22).addBox(6.5F, -14.5F, -0.5F, 4, 3, 1)     // Espejo izq
-                .texOffs(0, 22).addBox(-10.5F, -14.5F, -0.5F, 4, 3, 1),  // Espejo der
+                .texOffs(FRAME_U, FRAME_V).addBox(1.6F, -5.5F, -0.5F, 1, 4.5F, 1)   // Torreta manillar izq
+                .texOffs(FRAME_U, FRAME_V).addBox(-2.6F, -5.5F, -0.5F, 1, 4.5F, 1)  // Torreta manillar der
+                .texOffs(146, 66).addBox(-2.5F, -5.0F, -1.0F, 5, 3, 2)              // Velocímetro sobre torretas
+                .texOffs(162, 66).addBox(-9.0F, -6.5F, -0.5F, 18, 1, 1)             // Barra principal de aluminio
+                .texOffs(FRAME_U, FRAME_V).addBox(3.8F, -7.2F, -0.4F, 1, 1.2F, 0.8F) // Abrazadera barra izq
+                .texOffs(FRAME_U, FRAME_V).addBox(-4.8F, -7.2F, -0.4F, 1, 1.2F, 0.8F)// Abrazadera barra der
+                .texOffs(162, 66).addBox(-6.0F, -7.8F, -0.5F, 12, 1, 1)             // Barra transversal de refuerzo
+                .texOffs(FRAME_U, FRAME_V).addBox(7.0F, -6.7F, -0.7F, 4, 1.4F, 1.4F)
+                .texOffs(FRAME_U, FRAME_V).addBox(-11.0F, -6.7F, -0.7F, 4, 1.4F, 1.4F)
+                .texOffs(FRAME_U, FRAME_V).addBox(7.5F, -11.5F, -0.3F, 1, 5, 1)     // Varilla espejo izq
+                .texOffs(FRAME_U, FRAME_V).addBox(-8.5F, -11.5F, -0.3F, 1, 5, 1)    // Varilla espejo der
+                .texOffs(FRAME_U, FRAME_V).addBox(6.5F, -14.5F, -0.5F, 4, 3, 1)     // Espejo izq
+                .texOffs(FRAME_U, FRAME_V).addBox(-10.5F, -14.5F, -0.5F, 4, 3, 1),  // Espejo der
                 PartPose.rotation(-FORK_RAKE, 0.0F, 0.0F));
 
-        ModelKit.addWheel(steering, FRONT_WHEEL, at(0.0F, 20.8F, 0.0F), wheelTread0, wheelTread45, wheelHubs);
+        ModelKit.addOctagonWheel(leanRoot, FRONT_WHEEL, at(0.0F, -10.0F, -21.0F), WHEEL_RING, wheelHubs);
 
         return LayerDefinition.create(mesh, 256, 256);
     }
@@ -263,9 +261,8 @@ public final class MotorcycleModels {
             this.leanRoot = root.getChild(LEAN_ROOT);
             this.chassis = leanRoot.getChild(CHASSIS);
             this.steering = ModelKit.childOrNull(chassis, STEERING);
-            this.frontWheel = this.steering != null ? ModelKit.childOrNull(this.steering, FRONT_WHEEL) : null;
-            ModelPart swingarm = ModelKit.childOrNull(chassis, SWINGARM);
-            this.rearWheel = swingarm != null ? ModelKit.childOrNull(swingarm, REAR_WHEEL) : null;
+            this.frontWheel = ModelKit.childOrNull(leanRoot, FRONT_WHEEL);
+            this.rearWheel = ModelKit.childOrNull(leanRoot, REAR_WHEEL);
         }
 
         @Override
@@ -277,7 +274,7 @@ public final class MotorcycleModels {
 
             // b) Suspensión de largo recorrido y ralentí monocilíndrico 4T (escalados a px del modelo)
             float heavePx = ModelKit.heavePx(state.bodyHeave) / MODEL_SCALE;
-            if (state.isEngineRunning && state.speedRatio < ModelKit.IDLE_SPEED_RATIO) {
+            if (ModelKit.isIdling(state)) {
                 float idle = IDLE.sway(state.ageInTicks);
                 this.chassis.y = heavePx + IDLE.bobPx(state.ageInTicks) / MODEL_SCALE;
                 this.chassis.yRot = idle;
@@ -294,9 +291,10 @@ public final class MotorcycleModels {
                 this.steering.yRot = state.steer;
             }
 
-            // d) Rodadura continua de ambas ruedas vinculada al avance real
+            // d) Rodadura continua y dirección en las ruedas ancladas a leanRoot
             if (this.frontWheel != null) {
                 this.frontWheel.xRot = state.wheelRoll;
+                this.frontWheel.yRot = state.steer;
             }
             if (this.rearWheel != null) {
                 this.rearWheel.xRot = state.wheelRoll;

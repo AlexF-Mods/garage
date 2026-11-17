@@ -18,6 +18,8 @@ class VehicleTuningTest {
         assertNull(VehicleTuning.MOTOCARRO.firstInvalid());
         assertNull(VehicleTuning.MOTOCARGUERO.firstInvalid());
         assertNull(VehicleTuning.CHIVA.firstInvalid());
+        assertNull(VehicleTuning.TWINGO.firstInvalid());
+        assertNull(VehicleTuning.CHALUPA.firstInvalid());
     }
 
     @Test
@@ -52,7 +54,8 @@ class VehicleTuningTest {
     @Test
     void toArrayYFromArrayDanLaMismaCopia() {
         for (VehicleTuning tuning : new VehicleTuning[] {VehicleTuning.WILLYS, VehicleTuning.ENDURO,
-                VehicleTuning.MOTOCARRO, VehicleTuning.MOTOCARGUERO, VehicleTuning.CHIVA}) {
+                VehicleTuning.MOTOCARRO, VehicleTuning.MOTOCARGUERO, VehicleTuning.CHIVA, VehicleTuning.TWINGO,
+                VehicleTuning.CHALUPA}) {
             double[] values = tuning.toArray();
             assertEquals(VehicleTuning.FIELD_COUNT, values.length);
             assertEquals(tuning, VehicleTuning.fromArray(values));

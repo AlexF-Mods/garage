@@ -31,6 +31,7 @@ import net.minecraft.world.phys.Vec3;
  * @param tuning         manejo; es un {@code Supplier} porque el del Jeep depende de la config
  * @param mobsCanBoard   si las criaturas pequeñas que chocan con él a poca velocidad se suben de pasajeras
  * @param hasRadio       si el vehículo incorpora radio de música
+ * @param watercraft     si flota y se propulsa en el agua en lugar de en tierra
  */
 public record VehicleSpec(
         String id,
@@ -48,7 +49,8 @@ public record VehicleSpec(
         Horn horn,
         Supplier<VehicleTuning> tuning,
         boolean mobsCanBoard,
-        boolean hasRadio) {
+        boolean hasRadio,
+        boolean watercraft) {
 
     public static final int MAX_CONTAINER_ROWS = 6;
 
@@ -116,6 +118,7 @@ public record VehicleSpec(
         private Supplier<VehicleTuning> tuning;
         private boolean mobsCanBoard = true;
         private boolean hasRadio = false;
+        private boolean watercraft = false;
 
         private Builder(String id) {
             this.id = id;
@@ -195,6 +198,12 @@ public record VehicleSpec(
             return this;
         }
 
+        /** Si el vehículo es acuático (flota y acelera en el agua); por defecto es terrestre. */
+        public Builder watercraft(boolean watercraft) {
+            this.watercraft = watercraft;
+            return this;
+        }
+
         public Builder tuning(Supplier<VehicleTuning> tuning) {
             this.tuning = tuning;
             return this;
@@ -204,7 +213,7 @@ public record VehicleSpec(
         public VehicleSpec build() {
             return new VehicleSpec(id, width, height, seats, defaultColor, containerRows, wheelRadius,
                     headTurnLimit, directTurnRate, idlePitch, topPitch, leanPerSteer, horn, tuning, mobsCanBoard,
-                    hasRadio);
+                    hasRadio, watercraft);
         }
     }
 }

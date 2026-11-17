@@ -30,6 +30,9 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
  */
 public final class ChivaModels {
 
+    /** Escala visual del modelo en {@link ClientVehicles}. */
+    static final float MODEL_SCALE = 1.30F;
+
     /** Capa de carrocería teñible (capó, guardabarros, cabina y faldones). */
     public static final ModelLayerLocation BODY = layer("body");
     /** Capa de detalles sin teñir (parrilla, techo azul, madera, frisos, bancas, escalera y ruedas). */
@@ -78,20 +81,20 @@ public final class ChivaModels {
         PartDefinition root = mesh.getRoot();
         PartDefinition chassis = root.addOrReplaceChild(CHASSIS, CubeListBuilder.create(), at(0, 24, 0));
 
-        // Capó clásico de camión y coronilla superior
-        chassis.addOrReplaceChild("hood", cube(0, 0).addBox(-8, -22, -32, 16, 12, 16), PartPose.ZERO);
-        chassis.addOrReplaceChild("hood_crown", cube(66, 0).addBox(-6, -23, -31, 12, 1, 15), PartPose.ZERO);
+        // Capó clásico de camión y coronilla superior rebajados para ampliar la vista frontal del conductor
+        chassis.addOrReplaceChild("hood", cube(0, 0).addBox(-8, -19, -32, 16, 10, 16), PartPose.ZERO);
+        chassis.addOrReplaceChild("hood_crown", cube(66, 0).addBox(-6, -20, -31, 12, 1, 15), PartPose.ZERO);
 
-        // Guardabarros delanteros al ras de los faros, con paso de rueda para la llanta de radio 7 px
-        addSidePair(chassis, "fender_top", cube(122, 0).addBox(0, -21, -32, 6, 3, 16), 8, -14, 0);
-        addSidePair(chassis, "fender_front", cube(168, 0).addBox(0, -18, -32, 6, 8, 1), 8, -14, 0);
-        addSidePair(chassis, "fender_rear", cube(168, 0).addBox(0, -18, -17, 6, 8, 1), 8, -14, 0);
+        // Guardabarros delanteros con paso de rueda de 2 px sobre la llanta de radio 7 px (evita recortes en baches)
+        addSidePair(chassis, "fender_top", cube(122, 0).addBox(0, -19, -32, 6, 3, 16), 8, -14, 0);
+        addSidePair(chassis, "fender_front", cube(168, 0).addBox(0, -16, -32, 6, 7, 1), 8, -14, 0);
+        addSidePair(chassis, "fender_rear", cube(168, 0).addBox(0, -16, -17, 6, 7, 1), 8, -14, 0);
 
-        // Cabina delantera: puertas bajas, parales hasta el friso (y = -28) y dintel sellado hasta el techo (y = -36)
-        addSidePair(chassis, "cab_cowl", cube(0, 30).addBox(0, -22, -16, 2, 14, 12), 13, -15, 0);
-        addSidePair(chassis, "cab_pillar_f", cube(30, 30).addBox(0, -28, -16, 2, 6, 2), 13, -15, 0);
-        addSidePair(chassis, "cab_pillar_b", cube(30, 30).addBox(0, -28, -6, 2, 6, 2), 13, -15, 0);
-        chassis.addOrReplaceChild("cab_header", cube(40, 30).addBox(-13, -36, -16, 26, 5, 2), PartPose.ZERO);
+        // Cabina delantera: puertas bajas, parales finos hasta el friso (y = -28) y dintel reducido (2 px) en y = -36..-34
+        addSidePair(chassis, "cab_cowl", cube(0, 30).addBox(0, -20, -16, 2, 12, 12), 13, -15, 0);
+        addSidePair(chassis, "cab_pillar_f", cube(30, 42).addBox(0, -28, -16, 2, 8, 1), 13, -15, 0);
+        addSidePair(chassis, "cab_pillar_b", cube(30, 30).addBox(0, -28, -6, 2, 8, 2), 13, -15, 0);
+        chassis.addOrReplaceChild("cab_header", cube(40, 30).addBox(-13, -36, -16, 26, 2, 2), PartPose.ZERO);
 
         // Faldones laterales de la carrocería abierta, aleta sobre el paso de rueda trasero y faldón trasero
         addSidePair(chassis, "side_skirt_mid", cube(98, 30).addBox(0, -12, -4, 2, 4, 18), 13, -15, 0);
@@ -116,25 +119,26 @@ public final class ChivaModels {
         chassis.addOrReplaceChild("floor", cube(0, 66).addBox(-13, -10, -16, 26, 2, 48), PartPose.ZERO);
 
         // Frente: parrilla cromada, emblema, faros, direccionales, bómper y placa TBJ 274 (profundidad entera = 1)
-        chassis.addOrReplaceChild("grille", cube(154, 66).addBox(-8, -21, -33, 16, 10, 1), PartPose.ZERO);
-        chassis.addOrReplaceChild("hood_badge", cube(154, 90).addBox(-4, -23, -33, 8, 2, 1), PartPose.ZERO);
-        addSidePair(chassis, "headlight", cube(190, 66).addBox(0, -18, -33, 4, 4, 1), 9, -13, 0);
-        addSidePair(chassis, "turn_signal", cube(202, 66).addBox(0, -20, -33, 4, 1, 1), 9, -13, 0);
-        chassis.addOrReplaceChild("front_bumper", cube(154, 80).addBox(-15, -11, -35, 30, 4, 3), PartPose.ZERO);
-        chassis.addOrReplaceChild("front_plate", cube(222, 80).addBox(-3, -10.5F, -36, 6, 3, 1), PartPose.ZERO);
+        chassis.addOrReplaceChild("grille", cube(154, 66).addBox(-8, -18, -33, 16, 8, 1), PartPose.ZERO);
+        chassis.addOrReplaceChild("hood_badge", cube(154, 90).addBox(-4, -20, -33, 8, 2, 1), PartPose.ZERO);
+        addSidePair(chassis, "headlight", cube(190, 66).addBox(0, -16, -33, 4, 4, 1), 9, -13, 0);
+        addSidePair(chassis, "turn_signal", cube(202, 66).addBox(0, -18, -33, 4, 1, 1), 9, -13, 0);
+        chassis.addOrReplaceChild("front_bumper", cube(154, 80).addBox(-15, -10, -35, 30, 4, 3), PartPose.ZERO);
+        chassis.addOrReplaceChild("front_plate", cube(222, 80).addBox(-3, -9.5F, -36, 6, 3, 1), PartPose.ZERO);
 
-        // Cabina: tablero, volante y placas laterales TBJ 274 (el parabrisas va al final para dibujarse tras el interior)
-        chassis.addOrReplaceChild("dash", cube(154, 96).addBox(-13, -22, -16, 26, 3, 3), PartPose.ZERO);
-        chassis.addOrReplaceChild("steering_wheel", cube(210, 104).addBox(-3, -3, 0, 6, 6, 1), at(7, -21, -13));
-        addSidePair(chassis, "door_plaque", cube(0, 120).addBox(0, -21, -15, 1, 8, 10), 15, -16, 0);
+        // Cabina: tablero al ras del parabrisas (-20..-17), volante y placas TBJ 274
+        chassis.addOrReplaceChild("dash", cube(154, 96).addBox(-13, -20, -16, 26, 3, 3), PartPose.ZERO);
+        chassis.addOrReplaceChild("steering_wheel", cube(210, 104).addBox(-3, -3, 0, 6, 6, 1), at(6, -19, -13));
+        addSidePair(chassis, "door_plaque", cube(0, 120).addBox(0, -19, -15, 1, 8, 10), 15, -16, 0);
 
-        // 4 bancas transversales (1 de cabina + 3 de pasajeros)
+        // 4 bancas transversales (la de cabina elevada 4 px para buena vista sobre el capó, + 3 de pasajeros)
         CubeListBuilder cushion = cube(24, 120).addBox(-12, -13, -3, 24, 2, 6);
         CubeListBuilder back = cube(86, 120).addBox(-12, -21, 3, 24, 8, 2);
         int[] rowZ = {-11, 1, 13, 25};
         for (int i = 0; i < rowZ.length; i++) {
-            chassis.addOrReplaceChild("bench_cushion_" + i, cushion, at(0, 0, rowZ[i]));
-            chassis.addOrReplaceChild("bench_back_" + i, back, at(0, 0, rowZ[i]));
+            int seatY = i == 0 ? -4 : 0;
+            chassis.addOrReplaceChild("bench_cushion_" + i, cushion, at(0, seatY, rowZ[i]));
+            chassis.addOrReplaceChild("bench_back_" + i, back, at(0, seatY, rowZ[i]));
         }
 
         // 3 paneles pintados de extremo de banca, 3 parales coloridos por costado y riel roji-blanco
@@ -188,7 +192,7 @@ public final class ChivaModels {
 
         // Piezas con cristal translúcido al final de chassis para que todo el interior y la escalera se dibujen antes
         chassis.addOrReplaceChild("rear_upper", cube(184, 0).addBox(-15, -36, 32, 30, 14, 2), PartPose.ZERO);
-        chassis.addOrReplaceChild("windshield", cube(154, 104).addBox(-12.9F, -30.9F, -15.4F, 25.8F, 8.8F, 0.8F),
+        chassis.addOrReplaceChild("windshield", cube(154, 104).addBox(-13.0F, -34.0F, -15.5F, 26.0F, 14.0F, 1.0F),
                 PartPose.ZERO);
 
         // 4 llantas de camión (radio 7 px, apoyadas en y = 24 con eje en y = 17)

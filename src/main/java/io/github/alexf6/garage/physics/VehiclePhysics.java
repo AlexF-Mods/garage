@@ -11,25 +11,39 @@ public final class VehiclePhysics {
     private static final double STEER_RETURN_BOOST = 1.8;
     /** Peso de {@code grip} frente a {@code airDrag} (0.5 = mitad y mitad) en la velocidad lateral en el aire. */
     private static final double AIR_GRIP_BLEND = 0.5;
+    /** Factor de frenado de una embarcación varada en tierra firme (sin agua bajo el casco). */
+    public static final double WATERCRAFT_LAND_FRICTION = 0.80;
 
-    /** Nueva velocidad longitudinal (signo = sentido respecto al frente del carro). */
+    /** Nueva velocidad longitudinal para vehículos terrestres (signo = sentido respecto al frente). */
     public static double nextSpeed(double speed, VehicleInput input, boolean fuelled, boolean onGround,
                                    boolean inWater, VehicleTuning t) {
-        double v = speed;
-        double friction = onGround ? t.rollingFriction() : t.airDrag();
+        return nextSpeed(speed, input, fuelled, onGround, inWater, false, t);
+    }
 
-        if (inWater) {
-            v *= t.waterDrag(); // sin tracción en el agua
-        } else if (input.brake()) {
-            v = towardZero(v, t.handbrake());
-        } else if (input.throttle() > 0) {
-            if (v < 0) v = towardZero(v, t.brake());
-            else v = fuelled ? v + t.accel() * (1.0 - v / t.maxSpeed()) : v * friction;
-        } else if (input.throttle() < 0) {
-            if (v > 0) v = towardZero(v, t.brake());
-            else v = fuelled ? v - t.reverseAccel() * (1.0 + v / t.maxReverse()) : v * friction;
+    /**
+     * Nueva velocidad longitudinal (bloques/tick). Las embarcaciones ({@code watercraft = true}) aceleran y frenan en
+     * el agua y se detienen rápido si quedan varadas en tierra; los terrestres pierden tracción en el agua.
+     */
+    public static double nextSpeed(double speed, VehicleInput input, boolean fuelled, boolean onGround,
+                                   boolean inWater, boolean watercraft, VehicleTuning t) {
+        double v = speed;
+        if (watercraft && !inWater) {
+            v *= onGround ? WATERCRAFT_LAND_FRICTION : t.airDrag();
+        } else if (!watercraft && inWater) {
+            v *= t.waterDrag(); // sin tracción en el agua para vehículos terrestres
         } else {
-            v *= friction;
+            double friction = (watercraft || onGround) ? t.rollingFriction() : t.airDrag();
+            if (input.brake()) {
+                v = towardZero(v, t.handbrake());
+            } else if (input.throttle() > 0) {
+                if (v < 0) v = towardZero(v, t.brake());
+                else v = fuelled ? v + t.accel() * (1.0 - v / t.maxSpeed()) : v * friction;
+            } else if (input.throttle() < 0) {
+                if (v > 0) v = towardZero(v, t.brake());
+                else v = fuelled ? v - t.reverseAccel() * (1.0 + v / t.maxReverse()) : v * friction;
+            } else {
+                v *= friction;
+            }
         }
 
         v = clamp(v, -t.maxReverse(), t.maxSpeed());
@@ -48,16 +62,27 @@ public final class VehiclePhysics {
         return steer + clamp(target - steer, -rate, rate);
     }
 
-    /**
-     * Velocidad lateral (derrape) que queda tras un tick. Las llantas la absorben según el agarre; en el aire
-     * conserva una fracción intermedia entre {@code grip} y {@code airDrag} para poder redirigir el rumbo en saltos
-     * y bajadas de bloques.
-     */
+    /** Velocidad lateral (derrape) que queda tras un tick para vehículos terrestres. */
     public static double nextLateral(double lateral, VehicleInput input, boolean onGround, boolean inWater, VehicleTuning t) {
+        return nextLateral(lateral, input, onGround, inWater, false, t);
+    }
+
+    /**
+     * Velocidad lateral (derrape) que queda tras un tick. En embarcaciones el casco mantiene agarre lateral en el agua
+     * y frena en seco al tocar tierra; en vehículos terrestres la tierra aporta el agarre y el aire conserva parte.
+     */
+    public static double nextLateral(double lateral, VehicleInput input, boolean onGround, boolean inWater,
+                                     boolean watercraft, VehicleTuning t) {
         double v;
-        if (inWater) v = lateral * t.waterDrag();
-        else if (!onGround) v = lateral * ((t.grip() + t.airDrag()) * AIR_GRIP_BLEND);
-        else v = lateral * (input.brake() ? t.driftGrip() : t.grip());
+        if (watercraft) {
+            if (inWater) v = lateral * (input.brake() ? t.driftGrip() : t.grip());
+            else if (!onGround) v = lateral * ((t.grip() + t.airDrag()) * AIR_GRIP_BLEND);
+            else v = lateral * WATERCRAFT_LAND_FRICTION;
+        } else {
+            if (inWater) v = lateral * t.waterDrag();
+            else if (!onGround) v = lateral * ((t.grip() + t.airDrag()) * AIR_GRIP_BLEND);
+            else v = lateral * (input.brake() ? t.driftGrip() : t.grip());
+        }
         return Math.abs(v) < STOP_EPSILON ? 0.0 : v;
     }
 

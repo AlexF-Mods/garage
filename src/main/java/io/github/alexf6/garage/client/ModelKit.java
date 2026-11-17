@@ -21,6 +21,11 @@ final class ModelKit {
     /** Por debajo de esta fracción de la velocidad máxima el motor encendido "ralentiza" y el modelo vibra. */
     static final float IDLE_SPEED_RATIO = 0.05F;
 
+    /** Escalonamiento en X de los cubos ortogonales y a 45° para evitar caras laterales coplanares. */
+    private static final float TREAD_STEP_XZ = 0.10F;
+    private static final float TREAD_ROT_STEP = 0.20F;
+    private static final float TREAD_ROT_STEP_XZ = 0.30F;
+
     /** Capa {@code layer} del modelo {@code model}, bajo el espacio de nombres del mod. */
     static ModelLayerLocation layer(String model, String layer) {
         return new ModelLayerLocation(Identifier.fromNamespaceAndPath(GarageMod.MOD_ID, model), layer);
@@ -82,22 +87,24 @@ final class ModelKit {
         return -bodyHeave * PIXELS_PER_BLOCK;
     }
 
+    /** @return {@code true} si el vehículo está encendido y en ralentí (por debajo de {@link #IDLE_SPEED_RATIO}). */
+    static boolean isIdling(VehicleRenderer.VehicleRenderState state) {
+        return state.isEngineRunning && state.speedRatio < IDLE_SPEED_RATIO;
+    }
+
     /**
-     * Mueve el chasis de un vehículo de tres ruedas: rebote de la suspensión y cabeceo; con el motor encendido y casi
-     * parado, la vibración de ralentí; en marcha, el balanceo centrífugo hacia el exterior de la curva.
+     * Mueve el chasis de un vehículo: rebote de la suspensión y cabeceo; en ralentí, la vibración;
+     * en marcha, el balanceo centrífugo hacia el exterior de la curva.
      *
-     * @param chassis         pieza que se mueve (su origen está en el suelo)
-     * @param state           estado de render: motor, velocidad, dirección, cabeceo y rebote
-     * @param idle            vibración de ralentí propia del modelo
-     * @param idleRollShare   parte del vaivén de ralentí que pasa al balanceo lateral del chasis
-     * @param rollAtFullSteer balanceo (radianes) con la dirección y la velocidad al máximo; crece con la velocidad²
+     * @return {@code true} si está en ralentí
      */
-    static void moveChassis(ModelPart chassis, VehicleRenderer.VehicleRenderState state, IdleVibration idle,
-                            float idleRollShare, float rollAtFullSteer) {
-        float heavePx = heavePx(state.bodyHeave);
-        if (state.isEngineRunning && state.speedRatio < IDLE_SPEED_RATIO) {
+    static boolean moveChassis(ModelPart chassis, VehicleRenderer.VehicleRenderState state, IdleVibration idle,
+                               float idleRollShare, float rollAtFullSteer, float modelScale) {
+        float heavePx = heavePx(state.bodyHeave) / modelScale;
+        boolean idling = isIdling(state);
+        if (idling) {
             float idleBuzz = idle.sway(state.ageInTicks);
-            chassis.y = GROUND_Y_PX + heavePx + idle.bobPx(state.ageInTicks);
+            chassis.y = GROUND_Y_PX + heavePx + idle.bobPx(state.ageInTicks) / modelScale;
             chassis.xRot = state.bodyPitch + idleBuzz * idle.pitchShare();
             chassis.zRot = idleBuzz * idleRollShare;
         } else {
@@ -105,7 +112,11 @@ final class ModelKit {
             chassis.xRot = state.bodyPitch;
             chassis.zRot = -state.steer * (state.speedRatio * state.speedRatio) * rollAtFullSteer;
         }
+        return idling;
     }
+
+    /** Parámetros geométricos de una banda octogonal continua para {@link #addOctagonWheel}. */
+    record OctagonWheel(int treadU, int treadV, float xWidth, float rFlat, float rInner, float halfChord) {}
 
     /**
      * Añade a {@code parent} una rueda de radios: la banda de rodadura recta, otra girada 45° (para que parezca
@@ -117,6 +128,27 @@ final class ModelKit {
         wheel.addOrReplaceChild("tread_45", tread45, PartPose.rotation((float) Math.PI / 4, 0.0F, 0.0F));
         wheel.addOrReplaceChild("hubs", hubs, PartPose.ZERO);
         return wheel;
+    }
+
+    /** Añade una rueda de banda octogonal continua escalonando el ancho X para evitar caras coplanares. */
+    static void addOctagonWheel(PartDefinition parent, String name, PartPose pose, OctagonWheel spec,
+                                CubeListBuilder hubs) {
+        float radialThick = spec.rFlat() - spec.rInner();
+        float chord = 2.0F * spec.halfChord();
+        CubeListBuilder tread0 = octagonRing(spec.treadU(), spec.treadV(), spec.xWidth(),
+                spec.xWidth() - TREAD_STEP_XZ, spec.rFlat(), spec.rInner(), radialThick, spec.halfChord(), chord);
+        CubeListBuilder tread45 = octagonRing(spec.treadU(), spec.treadV(), spec.xWidth() - TREAD_ROT_STEP,
+                spec.xWidth() - TREAD_ROT_STEP_XZ, spec.rFlat(), spec.rInner(), radialThick, spec.halfChord(), chord);
+        addWheel(parent, name, pose, tread0, tread45, hubs);
+    }
+
+    private static CubeListBuilder octagonRing(int u, int v, float wx, float wz, float rFlat, float rInner,
+                                               float radialThick, float halfChord, float chord) {
+        return cube(u, v)
+                .addBox(-wx * 0.5F, -rFlat, -halfChord, wx, radialThick, chord)
+                .addBox(-wx * 0.5F, rInner, -halfChord, wx, radialThick, chord)
+                .addBox(-wz * 0.5F, -halfChord, -rFlat, wz, chord, radialThick)
+                .addBox(-wz * 0.5F, -halfChord, rInner, wz, chord, radialThick);
     }
 
     private ModelKit() {}

@@ -4,14 +4,17 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +26,9 @@ import net.minecraft.world.phys.Vec3;
  * {@code GarageMod.onInitialize}; antes de eso no hay nada registrado.
  */
 public final class ModVehicles {
+
+    public static final ResourceKey<CreativeModeTab> CREATIVE_TAB = ResourceKey.create(
+            Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(GarageMod.MOD_ID, "main"));
 
     private record Registered(EntityType<MotorVehicleEntity> entityType, Item item) {}
 
@@ -40,7 +46,12 @@ public final class ModVehicles {
         }
         registered = Collections.unmodifiableMap(result);
 
-        // Mostrar vehículos en la pestaña "Herramientas y utilidades" (donde están los botes)
+        // Pestaña creativa propia del mod ("Garage") y visibilidad en Herramientas y utilidades
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, CREATIVE_TAB, FabricCreativeModeTab.builder()
+                .icon(() -> new ItemStack(item(VehicleSpecs.CHIVA)))
+                .title(Component.translatable("itemGroup.garage.main"))
+                .displayItems((params, output) -> VehicleSpecs.ALL.forEach(spec -> output.accept(item(spec))))
+                .build());
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
                 .register(tab -> VehicleSpecs.ALL.forEach(spec -> tab.accept(item(spec))));
     }
@@ -92,7 +103,8 @@ public final class ModVehicles {
         ResourceKey<Item> key = ResourceKey.create(
                 Registries.ITEM, Identifier.fromNamespaceAndPath(GarageMod.MOD_ID, spec.id()));
         Item.Properties props = new Item.Properties().stacksTo(1);
-        return Registry.register(BuiltInRegistries.ITEM, key, new VehicleItem(entityType, props.setId(key)));
+        return Registry.register(BuiltInRegistries.ITEM, key,
+                new VehicleItem(entityType, spec.watercraft(), props.setId(key)));
     }
 
     private ModVehicles() {}

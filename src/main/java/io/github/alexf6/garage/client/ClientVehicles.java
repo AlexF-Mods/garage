@@ -31,8 +31,10 @@ final class ClientVehicles {
             entry(VehicleSpecs.CAR, 0.9F, 1.0F, CarModels.DEF),
             entry(VehicleSpecs.MOTORCYCLE, 0.5F, MotorcycleModels.MODEL_SCALE, MotorcycleModels.DEF),
             entry(VehicleSpecs.MOTOCARRO, 0.75F, MotocarroModels.MODEL_SCALE, MotocarroModels.DEF),
-            entry(VehicleSpecs.MOTOCARGUERO, 0.8F, 1.0F, MotocargueroModels.DEF),
-            entry(VehicleSpecs.CHIVA, 1.8F, 1.30F, ChivaModels.DEF));
+            entry(VehicleSpecs.MOTOCARGUERO, 0.8F, MotocargueroModels.MODEL_SCALE, MotocargueroModels.DEF),
+            entry(VehicleSpecs.CHIVA, 1.8F, ChivaModels.MODEL_SCALE, ChivaModels.DEF),
+            entry(VehicleSpecs.TWINGO, 0.85F, TwingoModels.MODEL_SCALE, TwingoModels.DEF),
+            entry(VehicleSpecs.CHALUPA, 1.1F, ChalupaModels.MODEL_SCALE, ChalupaModels.DEF));
 
     /** La textura de entidad es {@code textures/entity/<id>.png}: sale del id del spec, no se repite a mano. */
     private static Map.Entry<String, Model> entry(VehicleSpec spec, float shadowRadius, float scale, ModelDef def) {

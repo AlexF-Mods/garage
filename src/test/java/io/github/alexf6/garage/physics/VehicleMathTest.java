@@ -133,4 +133,13 @@ class VehicleMathTest {
         assertEquals(0, VehicleMath.cycleRadioTrack(-1, 3));
         assertEquals(0, VehicleMath.cycleRadioTrack(0, 0));
     }
+
+    @Test
+    void buoyancyVyFlotaHaciaLaLineaDeFlotacionYSaleEnAire() {
+        assertTrue(Double.isNaN(VehicleMath.buoyancyVy(-0.1, Double.NaN, 62.0, 0.18)));
+        assertTrue(Double.isNaN(VehicleMath.buoyancyVy(-0.1, 63.0, 63.0, 0.18)));
+        assertEquals(0.0, VehicleMath.buoyancyVy(0.0, 63.0, 63.0 - 0.18, 0.18), EPS);
+        assertTrue(VehicleMath.buoyancyVy(0.0, 63.0, 61.5, 0.18) > 0.0, "sumergida sube hacia la superficie");
+        assertTrue(VehicleMath.buoyancyVy(-0.4, 63.0, 62.82, 0.18) > -0.4, "amortigua la caída al entrar al agua");
+    }
 }

@@ -19,7 +19,14 @@ class ClientVehiclesTest {
 
     @Test
     void cadaVehiculoTieneSuModeloEnElCliente() {
-        VehicleRenderer.VehicleRenderState state = new VehicleRenderer.VehicleRenderState();
+        VehicleRenderer.VehicleRenderState idle = new VehicleRenderer.VehicleRenderState();
+        idle.isEngineRunning = true;
+        idle.ageInTicks = 10.0F;
+        VehicleRenderer.VehicleRenderState moving = new VehicleRenderer.VehicleRenderState();
+        moving.isEngineRunning = true;
+        moving.speedRatio = 0.8F;
+        moving.steer = 0.3F;
+        moving.wheelRoll = 1.2F;
         for (VehicleSpec spec : VehicleSpecs.ALL) {
             ClientVehicles.Model model = ClientVehicles.lookOf(spec);
             assertNotNull(model.look().texture(), spec.id());
@@ -27,8 +34,12 @@ class ClientVehiclesTest {
             var trim = model.trimLayer().get().bakeRoot();
             assertNotNull(body, spec.id() + " sin capa BODY");
             assertNotNull(trim, spec.id() + " sin capa TRIM");
-            model.look().partFactory().apply(body).setupAnim(state);
-            model.look().partFactory().apply(trim).setupAnim(state);
+            var bodyModel = model.look().partFactory().apply(body);
+            var trimModel = model.look().partFactory().apply(trim);
+            bodyModel.setupAnim(idle);
+            trimModel.setupAnim(idle);
+            bodyModel.setupAnim(moving);
+            trimModel.setupAnim(moving);
         }
     }
 }

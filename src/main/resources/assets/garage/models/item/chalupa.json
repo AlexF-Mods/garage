@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "garage:item/chalupa",
+		"layer1": "garage:item/chalupa_trim"
+	}
+}

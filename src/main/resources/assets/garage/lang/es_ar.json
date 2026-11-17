@@ -1,6 +1,6 @@
 {
-	"item.garage.car": "Carro",
-	"entity.garage.car": "Carro",
+	"item.garage.car": "Yipao",
+	"entity.garage.car": "Yipao",
 	"item.garage.motorcycle": "Yamaha XTZ 125",
 	"entity.garage.motorcycle": "Yamaha XTZ 125",
 	"item.garage.motocarro": "Motocarro (Torito)",
@@ -9,12 +9,17 @@
 	"entity.garage.motocarguero": "Motocarguero",
 	"item.garage.chiva": "Chiva",
 	"entity.garage.chiva": "Chiva",
+	"item.garage.twingo": "Renault Twingo",
+	"entity.garage.twingo": "Renault Twingo",
+	"item.garage.chalupa": "Chalupa",
+	"entity.garage.chalupa": "Chalupa",
 	"key.garage.horn": "Bocina",
 	"key.garage.radio": "Radio",
 	"key.category.garage.main": "Garage",
+	"itemGroup.garage.main": "Garage",
 	"message.garage.fuel": "Combustible: %s%%",
 	"message.garage.radio.off": "Radio: Apagada",
 	"message.garage.radio.track": "Radio: Pista %s",
 	"subtitles.garage.chiva_radio": "Suena la radio de la chiva",
-	"modmenu.descriptionTranslation.garage": "Vehículos para Minecraft: un Jeep Willys, una moto Enduro Yamaha XTZ 125, un motocarro Bajaj RE (Torito), un motocarguero de 200cc con platón de 54 casillas y una Chiva colombiana de 8 asientos, con combustible, baúl, colores y bocina."
+	"modmenu.descriptionTranslation.garage": "Vehículos para Minecraft: un Jeep Willys, una moto Enduro Yamaha XTZ 125, un motocarro Bajaj RE (Torito), un motocarguero de 200cc con platón de 54 casillas, una Chiva colombiana de 8 asientos, un Renault Twingo y una Chalupa fluvial colombiana, con combustible, baúl, colores y bocina."
 }

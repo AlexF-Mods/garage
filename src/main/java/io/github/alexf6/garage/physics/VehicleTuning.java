@@ -87,6 +87,30 @@ public record VehicleTuning(
             0.26, 0.90, 1.4  // grip, driftGrip, driftYawBoost
     );
 
+    /** Renault Twingo: compacto urbano ágil (~58 km/h, 0.80 b/t), batalla corta y giro cerrado en ciudad. */
+    public static final VehicleTuning TWINGO = new VehicleTuning(
+            0.80, 0.22,  // maxSpeed, maxReverse
+            0.036, 0.022,  // accel, reverseAccel
+            0.048, 0.042,  // brake, handbrake
+            0.984, 0.995, 0.82,  // rollingFriction, airDrag, waterDrag
+            1.65,  // wheelBase
+            0.68, 0.24,  // maxSteerLow, maxSteerHigh
+            0.14,  // steerRate
+            0.24, 0.91, 1.65  // grip, driftGrip, driftYawBoost
+    );
+
+    /** Chalupa fluvial colombiana: planeadora rápida en el agua (~61 km/h, 0.85 b/t) con motor fuera de borda. */
+    public static final VehicleTuning CHALUPA = new VehicleTuning(
+            0.85, 0.20,  // maxSpeed, maxReverse
+            0.032, 0.016,  // accel, reverseAccel
+            0.035, 0.030,  // brake, handbrake
+            0.985, 0.995, 0.88,  // rollingFriction, airDrag, waterDrag
+            2.40,  // wheelBase
+            0.65, 0.26,  // maxSteerLow, maxSteerHigh
+            0.10,  // steerRate
+            0.34, 0.88, 1.50  // grip, driftGrip, driftYawBoost
+    );
+
     /** Número de parámetros de {@link #toArray()}. */
     public static final int FIELD_COUNT = 16;
 

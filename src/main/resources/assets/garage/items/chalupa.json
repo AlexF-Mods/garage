@@ -1,0 +1,16 @@
+{
+	"model": {
+		"type": "minecraft:model",
+		"model": "garage:item/chalupa",
+		"tints": [
+			{
+				"type": "minecraft:dye",
+				"default": -15431464
+			},
+			{
+				"type": "minecraft:constant",
+				"value": -1
+			}
+		]
+	}
+}

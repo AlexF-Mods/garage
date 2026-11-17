@@ -7,6 +7,7 @@ import io.github.alexf6.garage.physics.VehicleInput;
 import io.github.alexf6.garage.physics.VehicleMath;
 import io.github.alexf6.garage.physics.VehiclePhysics;
 import io.github.alexf6.garage.physics.VehicleTuning;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -16,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -36,8 +38,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -51,6 +55,8 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
     private static final int FUEL_HUD_INTERVAL = 40; // la action bar dura ~3 s; se reenvía antes o si cambia
     private static final double DEFAULT_GRAVITY = 0.08; // bloques/tick²
     private static final float STEP_HEIGHT = 1.0F; // sube bloques completos sin saltar
+    private static final float WATERCRAFT_STEP_HEIGHT = 0.25F;
+    private static final double WATERCRAFT_DRAFT = 0.18; // bloques sumergidos en reposo sobre el agua
     private static final int INTERPOLATION_STEPS = 3;
     private static final int PARKED_DRIVE_INTERVAL = 10; // ticks entre comprobaciones de un vehículo aparcado
     private static final double PARKED_MOTION_SQR = 1.0e-6; // (bloques/tick)²
@@ -196,14 +202,16 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
         VehicleTuning tuning = tuning();
         Vec3 motion = getDeltaMovement();
         boolean onGround = onGround();
-        boolean inWater = isInWater();
+        boolean watercraft = spec.watercraft();
+        double waterY = watercraft ? findWaterSurfaceY() : Double.NaN;
+        boolean inWater = isInWater() || !Double.isNaN(waterY);
 
         // Primero gira con la velocidad que traía; luego la velocidad se descompone en el rumbo nuevo, así
-        // lo que el vehículo no alcanzó a girar queda como velocidad lateral (derrape) y las llantas la absorben
+        // lo que el vehículo no alcanzó a girar queda como velocidad lateral (derrape) y las llantas/casco la absorben
         double speed = VehicleMath.forwardOf(motion.x, motion.z, getYRot());
         steerAngle = VehiclePhysics.nextSteer(steerAngle, input, speed, tuning);
-        float yawStep = VehiclePhysics.yawDelta(speed, steerAngle, onGround && input.brake(), tuning);
-        yawStep = VehicleMath.directYaw(yawStep, speed, onGround, input.steering(), spec.directTurnRate());
+        float yawStep = VehiclePhysics.yawDelta(speed, steerAngle, (watercraft ? inWater : onGround) && input.brake(), tuning);
+        yawStep = VehicleMath.directYaw(yawStep, speed, watercraft ? inWater : onGround, input.steering(), spec.directTurnRate());
         setYRot(getYRot() + yawStep);
 
         double yawRad = Math.toRadians(getYRot());
@@ -211,12 +219,41 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
         double cos = Math.cos(yawRad);
         double forward = -motion.x * sin + motion.z * cos;
         double lateral = motion.x * cos + motion.z * sin;
-        forward = VehiclePhysics.nextSpeed(forward, input, getFuel() > 0, onGround, inWater, tuning);
-        lateral = VehiclePhysics.nextLateral(lateral, input, onGround, inWater, tuning);
+        forward = VehiclePhysics.nextSpeed(forward, input, getFuel() > 0, onGround, inWater, watercraft, tuning);
+        lateral = VehiclePhysics.nextLateral(lateral, input, onGround, inWater, watercraft, tuning);
 
-        setDeltaMovement(-sin * forward + cos * lateral, inWater ? -0.04 : motion.y, cos * forward + sin * lateral);
-        applyGravity();
+        double buoyVy = watercraft ? VehicleMath.buoyancyVy(motion.y, waterY, getY(), WATERCRAFT_DRAFT) : Double.NaN;
+        boolean floating = !Double.isNaN(buoyVy);
+        double vy = floating ? buoyVy : (inWater && !watercraft ? -0.04 : motion.y);
+        setDeltaMovement(-sin * forward + cos * lateral, vy, cos * forward + sin * lateral);
+        if (!floating) applyGravity();
         move(MoverType.SELF, getDeltaMovement());
+    }
+
+    /** Altura más alta de la superficie de agua que toca la quilla, o {@code NaN} si no hay agua bajo el casco. */
+    private double findWaterSurfaceY() {
+        AABB box = getBoundingBox();
+        int minX = Mth.floor(box.minX);
+        int maxX = Mth.floor(box.maxX);
+        int minY = Mth.floor(box.minY);
+        int maxY = Mth.floor(box.minY + 0.8);
+        int minZ = Mth.floor(box.minZ);
+        int maxZ = Mth.floor(box.maxZ);
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        double highest = Double.NaN;
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    pos.set(x, y, z);
+                    FluidState fluid = level().getFluidState(pos);
+                    if (fluid.is(FluidTags.WATER)) {
+                        double surface = y + fluid.getHeight(level(), pos);
+                        if (Double.isNaN(highest) || surface > highest) highest = surface;
+                    }
+                }
+            }
+        }
+        return highest;
     }
 
     /**
@@ -283,7 +320,7 @@ public class MotorVehicleEntity extends ChestVehicleEntity {
 
     @Override
     public float maxUpStep() {
-        return STEP_HEIGHT;
+        return spec != null && spec.watercraft() ? WATERCRAFT_STEP_HEIGHT : STEP_HEIGHT;
     }
 
     @Override

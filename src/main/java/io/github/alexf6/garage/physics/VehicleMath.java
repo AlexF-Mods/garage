@@ -102,6 +102,20 @@ public final class VehicleMath {
         return (int) Math.clamp((long) fuel * 100L / maxFuel, 0L, 100L);
     }
 
+    /** Fracción de desplazamiento hacia la línea de flotación por tick y amortiguación vertical en el agua. */
+    private static final double WATERCRAFT_BUOYANCY = 0.25;
+    private static final double WATERCRAFT_VERTICAL_DAMPING = 0.78;
+
+    /**
+     * Velocidad vertical (bloques/tick) para que una embarcación flote suavemente en {@code waterSurfaceY - draft},
+     * o {@code Double.NaN} si no hay agua bajo el casco (para que actúe la gravedad normal). Coste O(1).
+     */
+    public static double buoyancyVy(double currentVy, double waterSurfaceY, double entityY, double draft) {
+        if (Double.isNaN(waterSurfaceY) || entityY >= waterSurfaceY) return Double.NaN;
+        double error = (waterSurfaceY - draft) - entityY;
+        return (currentVy + error * WATERCRAFT_BUOYANCY) * WATERCRAFT_VERTICAL_DAMPING;
+    }
+
     /**
      * Siguiente pista de la radio en {@code [0, trackCount]} ({@code 0} = apagada). Coste O(1).
      */

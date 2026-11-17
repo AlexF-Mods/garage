@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		"PGP",
+		"IFI",
+		"PBP"
+	],
+	"key": {
+		"P": "#minecraft:planks",
+		"G": "minecraft:glass_pane",
+		"I": "minecraft:iron_ingot",
+		"F": "minecraft:furnace",
+		"B": "#minecraft:boats"
+	},
+	"result": {
+		"id": "garage:chalupa",
+		"count": 1
+	}
+}

@@ -74,39 +74,39 @@ public final class CarModels {
         chassis.addOrReplaceChild("headlight_r", headlight, at(-12, -21, -26));
         chassis.addOrReplaceChild("plate", cube(180, 52).addBox(1, -13, -26, 5, 3, 1), PartPose.ZERO);
 
-        // Marco del parabrisas y parales de la carpa (misma región negra); los parales arrancan
-        // encima del tablero y de los costados para no solaparse con ellos
+        // Marco del parabrisas y parales de la carpa (misma región negra); elevados 6 px para despejar
+        // la vista en primera persona y arrancando encima del tablero y costados sin solaparse
         CubeListBuilder black = cube(194, 28);
-        chassis.addOrReplaceChild("bar_top", black.addBox(-12, -32, -10, 24, 1, 1), PartPose.ZERO);
+        chassis.addOrReplaceChild("bar_top", black.addBox(-12, -38, -10, 24, 1, 1), PartPose.ZERO);
         chassis.addOrReplaceChild("bar_bottom", cube(194, 28).addBox(-12, -21, -10, 24, 1, 1), PartPose.ZERO);
-        chassis.addOrReplaceChild("post_fl", cube(194, 28).addBox(12, -34, -10, 1, 14, 1), PartPose.ZERO);
-        chassis.addOrReplaceChild("post_fr", cube(194, 28).addBox(-13, -34, -10, 1, 14, 1), PartPose.ZERO);
-        chassis.addOrReplaceChild("post_bl", cube(194, 28).addBox(12, -34, 23, 1, 14, 1), PartPose.ZERO);
-        chassis.addOrReplaceChild("post_br", cube(194, 28).addBox(-13, -34, 23, 1, 14, 1), PartPose.ZERO);
+        chassis.addOrReplaceChild("post_fl", cube(194, 28).addBox(12, -39, -10, 1, 19, 1), PartPose.ZERO);
+        chassis.addOrReplaceChild("post_fr", cube(194, 28).addBox(-13, -39, -10, 1, 19, 1), PartPose.ZERO);
+        chassis.addOrReplaceChild("post_bl", cube(194, 28).addBox(12, -39, 23, 1, 19, 1), PartPose.ZERO);
+        chassis.addOrReplaceChild("post_br", cube(194, 28).addBox(-13, -39, 23, 1, 19, 1), PartPose.ZERO);
 
         // Carpa de lona, faldones laterales con el rótulo y bultos de café
-        chassis.addOrReplaceChild("roof", cube(0, 118).addBox(-15, -35, -11, 30, 1, 38), PartPose.ZERO);
-        CubeListBuilder curtain = cube(138, 118).addBox(0, -34, 12, 1, 12, 12);
+        chassis.addOrReplaceChild("roof", cube(0, 118).addBox(-15, -40, -10, 30, 1, 37), PartPose.ZERO);
+        CubeListBuilder curtain = cube(138, 118).addBox(0, -39, 12, 1, 12, 12);
         chassis.addOrReplaceChild("curtain_l", curtain, at(13, 0, 0));
         chassis.addOrReplaceChild("curtain_r", curtain, at(-14, 0, 0));
-        chassis.addOrReplaceChild("sack_lower", cube(0, 160).addBox(-10, -39, 0, 20, 4, 17), PartPose.ZERO);
-        chassis.addOrReplaceChild("sack_upper", cube(76, 160).addBox(-8, -43, 2, 16, 4, 14), PartPose.ZERO);
+        chassis.addOrReplaceChild("sack_lower", cube(0, 160).addBox(-10, -44, 0, 20, 4, 17), PartPose.ZERO);
+        chassis.addOrReplaceChild("sack_upper", cube(76, 160).addBox(-8, -48, 2, 16, 4, 14), PartPose.ZERO);
 
         // Bandera de Colombia en la esquina trasera de la carpa
-        chassis.addOrReplaceChild("flag_pole", cube(138, 144).addBox(0, -57, 0, 1, 22, 1), at(12, 0, 22));
+        chassis.addOrReplaceChild("flag_pole", cube(138, 144).addBox(0, -62, 0, 1, 22, 1), at(12, 0, 22));
         // Pivote en el eje del asta y arriba del paño: al ondear gira alrededor del asta sin despegarse
-        chassis.addOrReplaceChild(FLAG, cube(146, 144).addBox(-0.5F, 0, -12.5F, 1, 8, 12), at(12.5F, -57, 22.5F));
+        chassis.addOrReplaceChild(FLAG, cube(146, 144).addBox(-0.5F, 0, -12.5F, 1, 8, 12), at(12.5F, -62, 22.5F));
 
-        // Volante (lado del conductor) y 4 asientos: cojín + respaldo
-        chassis.addOrReplaceChild("steering_wheel", cube(174, 144).addBox(-3, -3, 0, 6, 6, 1), at(7, -23, -5));
+        // Volante bajo detrás del tablero (sin estorbar la mira) y 4 asientos: cojín + respaldo
+        chassis.addOrReplaceChild("steering_wheel", cube(174, 144).addBox(-3, -3, 0, 6, 6, 1), at(6.5F, -19, -6));
         CubeListBuilder cushion = cube(190, 144).addBox(0, -12, 0, 8, 2, 6);
         CubeListBuilder back = cube(190, 154).addBox(0, -22, 0, 8, 10, 2);
-        chassis.addOrReplaceChild("cushion_fl", cushion, at(3, 0, -3));
-        chassis.addOrReplaceChild("cushion_fr", cushion, at(-11, 0, -3));
+        chassis.addOrReplaceChild("cushion_fl", cushion, at(3, -1, -3));
+        chassis.addOrReplaceChild("cushion_fr", cushion, at(-11, -1, -3));
         chassis.addOrReplaceChild("cushion_bl", cushion, at(3, 0, 9));
         chassis.addOrReplaceChild("cushion_br", cushion, at(-11, 0, 9));
-        chassis.addOrReplaceChild("back_fl", back, at(3, 0, 3));
-        chassis.addOrReplaceChild("back_fr", back, at(-11, 0, 3));
+        chassis.addOrReplaceChild("back_fl", back, at(3, -1, 3));
+        chassis.addOrReplaceChild("back_fr", back, at(-11, -1, 3));
         chassis.addOrReplaceChild("back_bl", back, at(3, 0, 15));
         chassis.addOrReplaceChild("back_br", back, at(-11, 0, 15));
 

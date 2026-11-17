@@ -206,9 +206,9 @@ public final class MotocarroModels {
         PartDefinition windshield = chassis.addOrReplaceChild("windshield_group", CubeListBuilder.create(),
                 PartPose.offsetAndRotation(0.0F, -31.5F, -24.0F, -0.335F, 0.0F, 0.0F));
         windshield.addOrReplaceChild("ws_post_l", cube(190, 200)
-                .addBox(14.2F, -21.5F, 0.0F, 1.8F, 21.5F, 2), PartPose.ZERO);
+                .addBox(14.2F, -21.5F, 0.0F, 1.75F, 21.5F, 2), PartPose.ZERO);
         windshield.addOrReplaceChild("ws_post_r", cube(190, 200)
-                .addBox(-16.0F, -21.5F, 0.0F, 1.8F, 21.5F, 2), PartPose.ZERO);
+                .addBox(-15.95F, -21.5F, 0.0F, 1.75F, 21.5F, 2), PartPose.ZERO);
         windshield.addOrReplaceChild("ws_top_bar", cube(190, 200)
                 .addBox(-14.2F, -21.5F, 0.0F, 28.4F, 1.5F, 2), PartPose.ZERO);
         windshield.addOrReplaceChild("ws_bot_bar", cube(190, 200)

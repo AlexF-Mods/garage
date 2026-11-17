@@ -87,10 +87,10 @@ public final class TwingoModels {
         hoodGroup.addOrReplaceChild("hood", cube(73, 0).addBox(-18.0F, 0.0F, -19.0F, 36, 5, 19), PartPose.ZERO);
         addSidePair(hoodGroup, "fender_slope", cube(184, 0).addBox(0.0F, 0.0F, -19.0F, 4, 4, 19), 18.0F, -22.0F);
         chassis.addOrReplaceChild("nose_panel", cube(118, 43).addBox(-18.0F, -19.0F, -41.0F, 36, 5, 3), PartPose.ZERO);
-        addSidePair(chassis, "front_corner", cube(206, 58).addBox(0.0F, -18.5F, -41.0F, 2, 4, 3), 20.0F, -22.0F);
+        addSidePair(chassis, "front_corner", cube(206, 58).addBox(0.05F, -18.5F, -41.0F, 1.9F, 4, 3), 20.0F, -22.0F);
 
         // 2. Costados: estribos de torpedo, puertas, arcos traseros y esquinas traseras
-        addSidePair(chassis, "cowl_side", cube(180, 58).addBox(0.0F, -24.0F, -22.0F, 2, 6, 4), 20.0F, -22.0F);
+        addSidePair(chassis, "cowl_side", cube(180, 58).addBox(0.05F, -24.0F, -22.0F, 1.9F, 6, 4), 20.0F, -22.0F);
         addSidePair(chassis, "door", cube(0, 0).addBox(0.0F, -24.0F, -18.0F, 2, 18, 34), 20.0F, -22.0F);
         addSidePair(chassis, "rear_arch_top", cube(73, 25).addBox(0.0F, -24.0F, 16.0F, 2, 6, 20), 20.0F, -22.0F);
         addSidePair(chassis, "rear_corner", cube(193, 58).addBox(0.0F, -24.0F, 36.0F, 2, 10, 4), 20.0F, -22.0F);
@@ -98,14 +98,14 @@ public final class TwingoModels {
         // 3. Parales A inclinados (-0.62 rad), techo bajo (y = -43..-41) y parales C
         PartDefinition windshieldFrame = chassis.addOrReplaceChild("windshield_frame", CubeListBuilder.create(),
                 PartPose.offsetAndRotation(0.0F, -24.0F, -22.0F, WINDSHIELD_RAKE, 0.0F, 0.0F));
-        addSidePair(windshieldFrame, "a_pillar", cube(235, 0).addBox(0.0F, -21.0F, 0.0F, 2, 21, 3), 20.0F, -22.0F);
+        addSidePair(windshieldFrame, "a_pillar", cube(235, 0).addBox(0.05F, -21.0F, 0.0F, 1.9F, 21, 3), 20.0F, -22.0F);
 
         chassis.addOrReplaceChild("roof_main", cube(0, 56).addBox(-22.0F, -43.0F, -10.0F, 44, 2, 45), PartPose.ZERO);
         chassis.addOrReplaceChild("roof_brow", cube(0, 104).addBox(-20.0F, -43.0F, -12.0F, 40, 2, 2), PartPose.ZERO);
 
         PartDefinition rearPillarGroup = chassis.addOrReplaceChild("c_pillar_group", CubeListBuilder.create(),
                 PartPose.offsetAndRotation(0.0F, -24.0F, 40.0F, HATCH_PITCH, 0.0F, 0.0F));
-        addSidePair(rearPillarGroup, "c_pillar", cube(220, 25).addBox(0.0F, -18.0F, -5.0F, 2, 18, 5), 20.0F, -22.0F);
+        addSidePair(rearPillarGroup, "c_pillar", cube(220, 25).addBox(0.05F, -18.0F, -5.0F, 1.9F, 18, 5), 20.0F, -22.0F);
 
         // 4. Portalón trasero y carcasas de espejos retrovisores
         chassis.addOrReplaceChild("rear_hatch_lower", cube(118, 25).addBox(-20.0F, -25.0F, 37.0F, 40, 12, 3),

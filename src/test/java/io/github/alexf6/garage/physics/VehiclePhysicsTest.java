@@ -136,7 +136,8 @@ class VehiclePhysicsTest {
         assertTrue(VehicleTuning.ENDURO.accel() > T.accel());
         assertTrue(VehicleTuning.MOTOCARRO.maxSpeed() > T.maxSpeed());
         assertTrue(VehicleTuning.MOTOCARRO.maxSpeed() < VehicleTuning.ENDURO.maxSpeed());
-        assertTrue(VehicleTuning.MOTOCARGUERO.maxSpeed() > T.maxSpeed());
+        assertTrue(VehicleTuning.MOTOCARGUERO.maxSpeed() < T.maxSpeed());
+        assertTrue(VehicleTuning.MOTOCARGUERO.maxSpeed() > VehicleTuning.CHIVA.maxSpeed());
         assertTrue(VehicleTuning.MOTOCARGUERO.maxSpeed() < VehicleTuning.MOTOCARRO.maxSpeed());
         assertTrue(VehicleTuning.MOTOCARGUERO.accel() > VehicleTuning.MOTOCARRO.accel());
         assertTrue(VehicleTuning.CHIVA.maxSpeed() < T.maxSpeed());

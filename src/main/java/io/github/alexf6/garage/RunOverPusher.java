@@ -39,7 +39,8 @@ final class RunOverPusher {
         RunOverRules rules = GarageConfig.get().runOver();
         double distance = Math.hypot(dx, dz);
         if (!rules.enabled() || distance <= 0.0) return;
-        RunOverMath.Impact impact = RunOverMath.impact(distance, vehicle.tuning().maxSpeed(), rules);
+        RunOverMath.Impact impact = RunOverMath.impact(
+                distance, vehicle.tuning().maxSpeed(), rules, vehicle.spec().impactMultiplier());
         if (impact.isNone()) return;
 
         double dirX = dx / distance;

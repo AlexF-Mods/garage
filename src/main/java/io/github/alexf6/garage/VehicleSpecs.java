@@ -15,11 +15,13 @@ public final class VehicleSpecs {
             .seats(new Vec3(0.40, 0.80, 0.12), new Vec3(-0.40, 0.80, 0.12),
                     new Vec3(0.44, 0.75, -0.75), new Vec3(-0.44, 0.75, -0.75))
             .color(0xC82127) // rojo Willys
-            .chestRows(3)
+            .chestRows(4) // jeep cafetero de carga: 36 casillas
             .wheelRadius(0.375F)
             .headTurnLimit(105.0F)
             .directTurnRate(1.2F)
             .enginePitch(0.5F, 1.4F)
+            .hasRadio(true)
+            .impactMultiplier(1.20F)
             .horn(20, SoundEvents.NOTE_BLOCK_PLING, 1.4F, 0.6F, 0.75F)
             .tuning(GarageConfig::carTuning)
             .build();
@@ -36,6 +38,7 @@ public final class VehicleSpecs {
             .enginePitch(0.7F, 1.7F)
             .leanPerSteer(0.48F)
             .mobsCanBoard(false) // una moto no es para criaturas
+            .impactMultiplier(0.50F)
             .horn(15, SoundEvents.NOTE_BLOCK_BELL, 1.2F, 1.4F)
             .tuning(() -> VehicleTuning.ENDURO)
             .build();
@@ -49,6 +52,7 @@ public final class VehicleSpecs {
             .headTurnLimit(105.0F)
             .directTurnRate(1.2F)
             .enginePitch(0.65F, 1.55F)
+            .impactMultiplier(0.75F)
             .horn(20, SoundEvents.NOTE_BLOCK_BELL, 1.4F, 1.6F, 1.9F)
             .tuning(() -> VehicleTuning.MOTOCARRO)
             .build();
@@ -62,6 +66,7 @@ public final class VehicleSpecs {
             .headTurnLimit(85.0F)
             .directTurnRate(1.8F)
             .enginePitch(0.60F, 1.50F)
+            .impactMultiplier(0.90F)
             .horn(20, SoundEvents.NOTE_BLOCK_BELL, 1.4F, 1.3F, 1.6F)
             .tuning(() -> VehicleTuning.MOTOCARGUERO)
             .build();
@@ -80,6 +85,7 @@ public final class VehicleSpecs {
             .directTurnRate(0.9F)
             .enginePitch(0.45F, 1.25F)
             .hasRadio(true)
+            .impactMultiplier(1.60F)
             .horn(25, SoundEvents.NOTE_BLOCK_PLING, 1.5F, 0.5F, 0.63F)
             .tuning(() -> VehicleTuning.CHIVA)
             .build();
@@ -90,11 +96,13 @@ public final class VehicleSpecs {
             .seats(new Vec3(0.40, 0.37, 0.25), new Vec3(-0.40, 0.37, 0.25),
                     new Vec3(0.40, 0.37, -0.53), new Vec3(-0.40, 0.37, -0.53))
             .color(0xC4CBD2) // gris plata metálico Twingo
-            .chestRows(3) // baúl trasero de 27 casillas
+            .chestRows(2) // compacto urbano: baúl trasero de 18 casillas
             .wheelRadius(0.3125F) // llanta de 16 px a escala 0.625x = radio 5/16 bloques
             .headTurnLimit(105.0F)
             .directTurnRate(1.5F)
             .enginePitch(0.60F, 1.55F)
+            .hasRadio(true)
+            .impactMultiplier(0.95F)
             .horn(18, SoundEvents.NOTE_BLOCK_PLING, 1.35F, 0.85F, 1.06F)
             .tuning(() -> VehicleTuning.TWINGO)
             .build();
@@ -114,6 +122,7 @@ public final class VehicleSpecs {
             .mobsCanBoard(false)
             .hasRadio(true)
             .watercraft(true)
+            .impactMultiplier(1.10F)
             .horn(20, SoundEvents.NOTE_BLOCK_PLING, 1.45F, 0.52F, 0.65F)
             .tuning(() -> VehicleTuning.CHALUPA)
             .build();

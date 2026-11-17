@@ -30,8 +30,9 @@ import net.minecraft.world.phys.Vec3;
  * @param horn           bocina
  * @param tuning         manejo; es un {@code Supplier} porque el del Jeep depende de la config
  * @param mobsCanBoard   si las criaturas pequeñas que chocan con él a poca velocidad se suben de pasajeras
- * @param hasRadio       si el vehículo incorpora radio de música
- * @param watercraft     si flota y se propulsa en el agua en lugar de en tierra
+ * @param hasRadio         si el vehículo incorpora radio de música
+ * @param watercraft       si flota y se propulsa en el agua en lugar de en tierra
+ * @param impactMultiplier factor de masa/peso en atropellos ({@code > 0}, por defecto {@code 1.0})
  */
 public record VehicleSpec(
         String id,
@@ -50,7 +51,8 @@ public record VehicleSpec(
         Supplier<VehicleTuning> tuning,
         boolean mobsCanBoard,
         boolean hasRadio,
-        boolean watercraft) {
+        boolean watercraft,
+        float impactMultiplier) {
 
     public static final int MAX_CONTAINER_ROWS = 6;
 
@@ -72,6 +74,7 @@ public record VehicleSpec(
         if (!(idlePitch > 0) || !(topPitch >= idlePitch)) throw invalid(id, "los tonos deben cumplir 0 < idle <= top");
         if (!(leanPerSteer >= 0)) throw invalid(id, "leanPerSteer no puede ser negativo");
         if (horn == null || tuning == null) throw invalid(id, "horn y tuning son obligatorios");
+        if (!(impactMultiplier > 0)) throw invalid(id, "impactMultiplier debe ser positivo");
     }
 
     private static IllegalArgumentException invalid(String id, String reason) {
@@ -119,6 +122,7 @@ public record VehicleSpec(
         private boolean mobsCanBoard = true;
         private boolean hasRadio = false;
         private boolean watercraft = false;
+        private float impactMultiplier = 1.0F;
 
         private Builder(String id) {
             this.id = id;
@@ -204,6 +208,12 @@ public record VehicleSpec(
             return this;
         }
 
+        /** Factor de masa/peso en atropellos ({@code > 0}); por defecto {@code 1.0}. */
+        public Builder impactMultiplier(float impactMultiplier) {
+            this.impactMultiplier = impactMultiplier;
+            return this;
+        }
+
         public Builder tuning(Supplier<VehicleTuning> tuning) {
             this.tuning = tuning;
             return this;
@@ -213,7 +223,7 @@ public record VehicleSpec(
         public VehicleSpec build() {
             return new VehicleSpec(id, width, height, seats, defaultColor, containerRows, wheelRadius,
                     headTurnLimit, directTurnRate, idlePitch, topPitch, leanPerSteer, horn, tuning, mobsCanBoard,
-                    hasRadio, watercraft);
+                    hasRadio, watercraft, impactMultiplier);
         }
     }
 }

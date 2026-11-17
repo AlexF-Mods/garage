@@ -15,7 +15,7 @@ mod en cliente y servidor.
 - **Combustible:** clic derecho con carbón o carbón vegetal. Cada unidad da 80 s de acelerador y el tanque lleno 10 min.
   Solo se gasta mientras aceleras o retrocedes. El nivel aparece en la barra de acción mientras conduces.
 - **Color:** clic derecho con cualquier tinte.
-- **Baúl / alforja:** shift + clic derecho sobre el vehículo (27 espacios en el Yipao y en el Twingo, 36 en la chalupa, 54 en el platón del motocarguero y en el capacete de la chiva, 18 en el motocarro y 9 en la moto).
+- **Baúl / alforja:** shift + clic derecho sobre el vehículo (36 espacios en el Yipao y en la chalupa, 18 en el Twingo y en el motocarro, 54 en el platón del motocarguero y en el capacete de la chiva, y 9 en la moto).
 - **Romperlo:** golpéalo como a un bote. Suelta el ítem con su color y su nombre, y lo que haya en el baúl.
 
 ### Manejo
@@ -28,7 +28,7 @@ mod en cliente y servidor.
 | H | Bocina (se puede cambiar en Controles → Garage) |
 | R | Radio de la Chiva y de la Chalupa: enciende, cambia entre 3 pistas y apaga (se puede cambiar en Controles → Garage) |
 
-- Velocidad máxima hacia adelante de unos 43 km/h en el Yipao (14 km/h en reversa), 68 km/h en la moto Enduro, 52 km/h en el motocarro, 47 km/h en el motocarguero, 40 km/h en la chiva, 58 km/h en el Renault Twingo (16 km/h en reversa) y 61 km/h en la Chalupa sobre el agua (14 km/h en reversa). Los vehículos terrestres suben bloques completos sin saltar.
+- Velocidad máxima hacia adelante de unos 49 km/h en el Yipao (14 km/h en reversa), 68 km/h en la moto Enduro, 52 km/h en el motocarro, 47 km/h en el motocarguero, 40 km/h en la chiva, 58 km/h en el Renault Twingo (16 km/h en reversa) y 61 km/h en la Chalupa sobre el agua (14 km/h en reversa). Los vehículos terrestres suben bloques completos sin saltar.
 - La dirección depende de la velocidad: a baja velocidad gira cerrado (radio de unos 2.5 bloques) y a alta se endurece.
   En reversa el giro se invierte, como en un carro real.
 - En el agua los vehículos terrestres se hunden despacio y no tienen tracción; la Chalupa flota y navega exclusivamente en el agua (si se vara en tierra frena en seco). El vehículo amortigua las caídas: los pasajeros no reciben daño.
@@ -39,13 +39,13 @@ mod en cliente y servidor.
 
 | Ítem | Receta |
 |---|---|
-| Yipao | `IGI` / `IFI` / `KKK` con lingotes de hierro (`I`), panel de vidrio (`G`), horno (`F`) y lana negra (`K`) |
+| Yipao | `IGI` / `IFI` / `KCK` con lingotes de hierro (`I`), panel de vidrio (`G`), horno (`F`), lana negra (`K`) y cofre (`C`) |
 | Moto | ` H ` / `IFI` / `KWK` con barrotes de hierro (`H`), lingotes (`I`), horno (`F`), lana negra (`K`) y cuero (`W`) |
 | Motocarro | `LGL` / `IFI` / `KCK` con cuero (`L`), vidrio (`G`), lingotes (`I`), horno (`F`), lana negra (`K`) y cofre (`C`) |
 | Motocarguero | `BLC` / `IFI` / `KBK` con barrotes de hierro (`B`), cuero (`L`), cofre (`C`), lingotes (`I`), horno (`F`) y lana negra (`K`) |
-| Chiva | `PGP` / `IFI` / `KCK` con tablones de madera (`P`), panel de vidrio (`G`), lingotes (`I`), horno (`F`), lana negra (`K`) y cofre (`C`) |
+| Chiva | `PGP` / `BFB` / `CKC` con tablones de madera (`P`), panel de vidrio (`G`), bloques de hierro (`B`), horno (`F`), cofres (`C`) y lana negra (`K`) |
 | Renault Twingo | `GGG` / `IFI` / `KCK` con panel de vidrio (`G`), lingotes de hierro (`I`), horno (`F`), lana negra (`K`) y cofre (`C`) |
-| Chalupa | `PGP` / `IFI` / `PBP` con tablones de madera (`P`), panel de vidrio (`G`), lingotes (`I`), horno (`F`) y cualquier bote vanilla (`B`) |
+| Chalupa | `PCP` / `GFG` / `IBI` con tablones de madera (`P`), cofre (`C`), panel de vidrio (`G`), horno (`F`), lingotes (`I`) y cualquier bote vanilla (`B`) |
 
 ## Configuración
 

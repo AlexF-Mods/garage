@@ -4,13 +4,14 @@
 	"pattern": [
 		"IGI",
 		"IFI",
-		"KKK"
+		"KCK"
 	],
 	"key": {
 		"I": "minecraft:iron_ingot",
 		"G": "minecraft:glass_pane",
 		"F": "minecraft:furnace",
-		"K": "minecraft:black_wool"
+		"K": "minecraft:black_wool",
+		"C": "minecraft:chest"
 	},
 	"result": {
 		"id": "garage:car",

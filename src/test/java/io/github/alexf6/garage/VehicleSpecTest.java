@@ -25,7 +25,7 @@ class VehicleSpecTest {
     private static VehicleSpec spec(String id, float width, List<Vec3> seats, int color, int rows,
                                     float wheel, float head, float idle, float top, float lean) {
         return new VehicleSpec(id, width, 1.0F, seats, color, rows, wheel, head, 1.0F, idle, top, lean, HORN,
-                () -> VehicleTuning.WILLYS, true, false, false);
+                () -> VehicleTuning.WILLYS, true, false, false, 1.0F);
     }
 
     private static VehicleSpec valid() {
@@ -134,7 +134,7 @@ class VehicleSpecTest {
         VehicleSpec spec = complete().leanPerSteer(0.4F).build();
         assertEquals(new VehicleSpec("bike", 1.0F, 1.2F, List.of(new Vec3(0, 0.6, 0)), 0xFF0000, 1, 0.3F, 90.0F,
                 1.0F, 0.5F, 1.5F, 0.4F, new VehicleSpec.Horn(10, SOUND, 1.0F, List.of(1.0F, 1.2F)), TUNING, true,
-                false, false), spec);
+                false, false, 1.0F), spec);
     }
 
     @Test
@@ -145,6 +145,19 @@ class VehicleSpecTest {
         VehicleSpec boat = complete().watercraft(true).build();
         assertTrue(boat.watercraft());
         assertFalse(complete().build().watercraft());
+        assertTrue(VehicleSpecs.CAR.hasRadio());
+        assertTrue(VehicleSpecs.TWINGO.hasRadio());
+        assertTrue(VehicleSpecs.CHIVA.hasRadio());
+        assertTrue(VehicleSpecs.CHALUPA.hasRadio());
+        assertFalse(VehicleSpecs.MOTORCYCLE.hasRadio());
+    }
+
+    @Test
+    void impactMultiplierDebeSerPositivo() {
+        assertEquals(1.0F, complete().build().impactMultiplier());
+        assertEquals(1.6F, complete().impactMultiplier(1.6F).build().impactMultiplier());
+        assertThrows(IllegalArgumentException.class, () -> complete().impactMultiplier(0.0F).build());
+        assertThrows(IllegalArgumentException.class, () -> complete().impactMultiplier(-0.5F).build());
     }
 
     @Test

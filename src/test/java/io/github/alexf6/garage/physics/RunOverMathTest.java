@@ -73,4 +73,16 @@ class RunOverMathTest {
     void sinDanoConfiguradoNuncaHayDano() {
         assertEquals(0.0F, RunOverMath.impact(0.6, MAX, rules(PUSH, DAMAGE_FROM, 0.0)).damage());
     }
+
+    @Test
+    void elFactorDeMasaEscalaDanoYEmpuje() {
+        RunOverMath.Impact base = RunOverMath.impact(0.5, MAX, RULES, 1.0);
+        RunOverMath.Impact heavy = RunOverMath.impact(0.5, MAX, RULES, 1.5);
+        RunOverMath.Impact light = RunOverMath.impact(0.5, MAX, RULES, 0.5);
+        assertEquals(base.damage() * 1.5F, heavy.damage(), 1e-5F);
+        assertEquals(base.strength() * 1.5, heavy.strength(), 1e-9);
+        assertEquals(base.damage() * 0.5F, light.damage(), 1e-5F);
+        assertSame(RunOverMath.Impact.NONE, RunOverMath.impact(0.5, MAX, RULES, 0.0));
+        assertSame(RunOverMath.Impact.NONE, RunOverMath.impact(0.5, MAX, RULES, -1.0));
+    }
 }

@@ -27,10 +27,10 @@ public record VehicleTuning(
         double driftGrip,
         double driftYawBoost
 ) {
-    /** Jeep Willys: ~43 km/h, buena maniobra a baja velocidad, dirección más firme a alta. */
+    /** Jeep Willys "Yipao": ~49 km/h (0.68 b/t), buena maniobra a baja velocidad, dirección más firme a alta. */
     public static final VehicleTuning WILLYS = new VehicleTuning(
-            0.6, 0.2,  // maxSpeed, maxReverse
-            0.03, 0.02,  // accel, reverseAccel
+            0.68, 0.2,  // maxSpeed, maxReverse
+            0.033, 0.02,  // accel, reverseAccel
             0.04, 0.035,  // brake, handbrake
             0.98, 0.995, 0.85,  // rollingFriction, airDrag, waterDrag
             1.75,  // wheelBase

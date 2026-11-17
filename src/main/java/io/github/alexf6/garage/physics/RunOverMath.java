@@ -27,11 +27,21 @@ public final class RunOverMath {
      * @param rules    umbrales, daño y empuje configurados
      */
     public static Impact impact(double distance, double maxSpeed, RunOverRules rules) {
-        if (!(distance > 0.0) || !(maxSpeed > 0.0)) return Impact.NONE;
+        return impact(distance, maxSpeed, rules, 1.0);
+    }
+
+    /**
+     * @param distance         desplazamiento horizontal medido en el tick (bloques)
+     * @param maxSpeed         velocidad máxima del manejo del servidor (bloques/tick)
+     * @param rules            umbrales, daño y empuje configurados
+     * @param impactMultiplier factor de masa/peso del vehículo ({@code > 0}); escala el daño y el empuje
+     */
+    public static Impact impact(double distance, double maxSpeed, RunOverRules rules, double impactMultiplier) {
+        if (!(distance > 0.0) || !(maxSpeed > 0.0) || !(impactMultiplier > 0.0)) return Impact.NONE;
         double speed = Math.min(distance, maxSpeed);
         if (speed < rules.pushSpeed()) return Impact.NONE;
-        double strength = rules.knockback() * VehicleMath.speedRatio(speed, maxSpeed);
-        float damage = (float) Math.max((speed - rules.damageSpeed()) * rules.damagePerSpeed(), 0.0);
+        double strength = rules.knockback() * VehicleMath.speedRatio(speed, maxSpeed) * impactMultiplier;
+        float damage = (float) Math.max((speed - rules.damageSpeed()) * rules.damagePerSpeed() * impactMultiplier, 0.0);
         return new Impact(speed, strength, damage);
     }
 
